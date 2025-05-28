@@ -1,0 +1,23 @@
+.projects-section {
+  /* Remove the panel background/shadow */
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  /* Keep vertical spacing and padding if desired */
+  padding: 2rem 0;
+  margin: 0 0 2rem 0;
+}
+
+.projects-section h2 {
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.projects-section ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #ccc;
+  line-height: 1.6;
+}

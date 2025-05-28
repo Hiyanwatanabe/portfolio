@@ -1,0 +1,20 @@
+/* src/App.css */
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* 240px for sidebar, the rest for main */
+  min-height: 100vh;
+}
+
+/* Optional: smooth scrolling to anchors */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional global reset / body styling */
+body {
+  margin: 0;
+  background: #070911;
+  color: #ececf1;
+  font-family: 'Segoe UI', sans-serif;
+}

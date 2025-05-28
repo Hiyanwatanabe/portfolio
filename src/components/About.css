@@ -1,0 +1,23 @@
+.about-section {
+  /* Remove the glass styling */
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  /* You can keep padding if you still want space around the text */
+  padding: 2rem 0;
+  margin: 0 0 2rem 0;
+}
+
+.about-section h2 {
+  /* If you had text shadows or special colors, leave them or tweak */
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+/* Body text */
+.about-section p {
+  color: #ccc;
+  line-height: 1.6;
+  margin: 0;
+}

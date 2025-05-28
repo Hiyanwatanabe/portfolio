@@ -1,0 +1,36 @@
+/* src/components/MainContent.css */
+
+/* push the entire pane right by exactly 240px (the sidebar) */
+.main-content {
+  margin-left: 50px;      /* <— this forces it out from underneath */
+  padding: 3rem 1.5rem;    /* your existing padding */
+  background: linear-gradient(
+    135deg,
+    rgba(7, 9, 17, 1) 0%,
+    rgba(15, 19, 32, 1) 100%
+  );
+  overflow-y: auto;
+}
+
+/* remove any leftover “glass panel” styling: */
+.main-content section {
+  margin: 0 0 2rem 0;
+  padding: 2rem 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.main-content section h2 {
+  margin: 0 0 1rem 0;
+  color: var(--accent);
+  text-align: left;
+}
+
+.main-content section p,
+.main-content section ul,
+.main-content section .contact-links {
+  margin: 0 0 5 rem 0;
+  color: #ccc;
+  line-height: 2.1;
+}
