@@ -1,9 +1,14 @@
-/* src/App.css */
+src/App.css
 
 .app-layout {
   display: grid;
   grid-template-columns: 240px 1fr; /* 240px for sidebar, the rest for main */
   min-height: 100vh;
+}
+.main-content {
+  max-width: 800px;    /* or whatever width feels right */
+  margin: 0 auto;      /* center it in its grid cell */
+  padding: 2rem;       /* give yourself some breathing room */
 }
 
 /* Optional: smooth scrolling to anchors */
@@ -17,4 +22,24 @@ body {
   background: #070911;
   color: #ececf1;
   font-family: 'Segoe UI', sans-serif;
+}
+/* src/App.css */
+
+/* Define a layout wrapper */
+.layout-wrapper {
+  display: flex;
+  align-items: flex-start; /* only aligns children (sidebar + main) at the top */
+}
+
+/* The sidebar itself gets NO layout overrides here */
+.layout-wrapper .sidebar {
+  /* nothing here—your existing sidebar css stays in Sidebar.css */
+}
+
+/* The main pane can keep its own styling, but no top-padding hack needed */
+.layout-wrapper .main-content {
+  margin-left: 240px;
+  padding: 3rem 1.5rem;
+  background-color: var(--bg);
+  transition: background-color 0.3s;
 }

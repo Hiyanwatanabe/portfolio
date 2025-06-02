@@ -1,23 +1,131 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   src/components/About.css
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* (1) Section wrapper—provides vertical spacing */
 .about-section {
-  /* Remove the glass styling */
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-
-  /* You can keep padding if you still want space around the text */
   padding: 2rem 0;
-  margin: 0 0 2rem 0;
+  margin-bottom: 2rem;
+  color: var(--text);
 }
 
-.about-section h2 {
-  /* If you had text shadows or special colors, leave them or tweak */
-  color: var(--accent);
-  margin-bottom: 1rem;
+/* (2) Center content and create left/right split */
+.about-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;       /* stacks nicely on narrow screens */
+  gap: 2rem;             /* space between left column and right column */
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-/* Body text */
-.about-section p {
-  color: #ccc;
-  line-height: 1.6;
+/* (3) LEFT COLUMN: owns both text block and square Gannon image */
+.about-text-and-square {
+  flex: 1;               /* let this column take available space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center items horizontally */
+  gap: 2rem;             /* space between paragraph and square image */
+}
+
+/* (4) The paragraph text itself */
+.about-text {
+  width: 100%;
+}
+
+.about-text p {
   margin: 0;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* (5) Square “Gannon” image container */
+.about-square {
+  /* Fixed square size (you can adjust as needed) */
+  width: 350px;
+  height: 270px;
+
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* (6) The img inside about-square */
+.square-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* crop/scale to fill the square */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* (7) Add a subtle hover effect on the square image */
+.about-square:hover .square-img {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+/* (8) RIGHT COLUMN: three images stacked vertically */
+.about-images {
+  display: flex;
+  flex-direction: column;  /* stack top to bottom */
+  gap: 1rem;               /* space between each image */
+  align-items: center;     /* center each image horizontally */
+}
+
+/* (9) Each image wrapper allows hover boundaries */
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+
+  /* You can adjust these to make these images as big or small as you like */
+  width: 380px;
+  height: 200px;  /* roughly 1.5:1 aspect ratio */
+
+  flex-shrink: 0;         /* prevents shrinking */
+}
+
+/* (10) All three right‐side images share this base style */
+.about-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* crop/scale to fill */
+  transition: transform 0.3s ease, filter 0.3s ease;
+  display: block;
+}
+
+/* (11) Hover effect on the right‐side images */
+.image-wrapper:hover .about-img {
+  transform: scale(1.05) rotate(-2deg);
+  filter: brightness(1.1);
+}
+
+/* (12) Responsive adjustments: on narrow screens, stack everything vertically */
+@media (max-width: 800px) {
+  .about-content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* The left column (text + square) will remain centered */
+  .about-text-and-square {
+    gap: 1.5rem;  /* less gap on mobile */
+  }
+
+  /* Right column: three stacked images become smaller */
+  .about-images {
+    margin-top: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  .image-wrapper {
+    width: 220px;   /* smaller on mobile */
+    height: 145px;  /* same ~1.5:1 aspect ratio */
+  }
+
+  /* Also shrink the square Gannon image on mobile */
+  .about-square {
+    width: 200px;
+    height: 200px;
+  }
 }
