@@ -5,14 +5,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-   background-color: #0f1320;   /* your dark bg */
+   background-color: #0f1320;   
    color: #ececf1;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-/* Override any panel backgrounds in main-content */
 .main-content,
 .main-content *,
 .main-content *::before,
@@ -22,7 +21,7 @@ code {
   backdrop-filter: none     !important;
 }
 
-/* And kill any height/overflow that traps scrollbars */
+
 .main-content {
   overflow: visible !important;
   height: auto       !important;

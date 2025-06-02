@@ -1,43 +1,24 @@
-/* src/components/MainContent.css */
-
-/* ———————————————————————————————————————————————— */
-/* 0) Scoped top-alignment: only main-content, not sidebar */
-/* ———————————————————————————————————————————————— */
 .app-layout > .main-content {
-  padding-top: 0;  /* make sure About/Projects start at the very top */
+  padding-top: 0;
 }
 
-/* ———————————————————————————————————————————————— */
-/* 1) Main pane: basic positioning, no backgrounds or internal scroll */
-/* ———————————————————————————————————————————————— */
 .main-content {
-  margin-left: 240px;       /* keep it beside the sidebar */
-  margin-right: auto;       /* you can add max-width below if you like */
-  padding: 3rem 1.5rem;     /* your existing padding */
-  
-  /* KILL any panel look */
+  margin-left: 240px;
+  margin-right: auto;
+  padding: 3rem 1.5rem;
   background: none !important;
   overflow: visible !important;
   height: auto !important;
 }
 
-/* Optional: constrain line-length for readability */
-/* .main-content { max-width: 800px; } */
-
-/* ———————————————————————————————————————————————— */
-/* 2) Section reset: transparent, no extra padding or shadow */
-/* ———————————————————————————————————————————————— */
 .main-content section {
   margin: 0 0 2rem 0;
-  padding: 0;               /* remove internal section padding */
+  padding: 0;
   background: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
-/* ———————————————————————————————————————————————— */
-/* 3) Section headers & text */
-/* ———————————————————————————————————————————————— */
 .main-content section h2 {
   margin: 0 0 1rem 0;
   color: var(--accent);
@@ -52,9 +33,6 @@
   line-height: 1.7;
 }
 
-/* ———————————————————————————————————————————————— */
-/* 4) Fade-in helper (unchanged) */
-/* ———————————————————————————————————————————————— */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);

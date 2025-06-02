@@ -49,16 +49,14 @@
   color: var(--muted);
 }
 
-/* ——— NAV LINKS ——— */
 .nav-links {
-  display: flex;            
+  display: flex;
   flex-direction: column;
-  gap: 0.75rem;             /* consistent vertical spacing */
+  gap: 0.75rem;
   margin-bottom: 1rem;
   font-size: 1.1rem;
   list-style: none;
   padding: 0;
-  /* no text-decoration here! */
 }
 
 .nav-links a {
@@ -70,15 +68,13 @@
   transition: background 0.2s, color 0.2s, text-decoration-thickness 0.2s;
 }
 
-/* Hover / focus state */
 .nav-links a:hover,
 .nav-links a:focus {
   background: rgba(0, 196, 216, 0.1);
   color: var(--fg);
-  text-decoration-thickness: 2px;  /* slightly thicker underline on hover */
+  text-decoration-thickness: 2px;
 }
 
-/* If you switch to NavLink, you can style the active link: */
 .nav-links a.active {
   background: var(--accent);
   color: var(--bg);
@@ -86,15 +82,12 @@
   text-decoration-thickness: 2px;
 }
 
-
-/* ——— SOCIAL LINKS ——— */
 .social-links {
-  margin-top: 8rem;           /* closer to the nav */
+  margin-top: 8rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 
 .social-links a {
   display: inline-flex;

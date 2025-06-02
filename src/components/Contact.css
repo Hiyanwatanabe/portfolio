@@ -1,17 +1,11 @@
-/* src/components/Contact.css */
-
-/* keep the same centering/width as About + Projects */
 .contact-section {
- background: transparent;
+  background: transparent;
   box-shadow: none;
   backdrop-filter: none;
-
-  /* You can keep padding if you still want space around the text */
   padding: 2rem 0;
   margin: 0 0 2rem 0;
 }
 
-/* shared styling for each “line” */
 .contact-item {
   display: flex;
   align-items: center;
@@ -21,7 +15,6 @@
   font-family: "Segoe UI", sans-serif;
 }
 
-/* heading flush–left */
 .contact-section h2 {
   margin: 0 0 1rem;
   color: var(--accent);
@@ -29,7 +22,6 @@
   text-align: left;
 }
 
-/* links */
 .contact-item a {
   color: var(--accent);
   text-decoration: none;
