@@ -28,13 +28,13 @@
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--accent);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .sidebar-photo:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 40%);
 }
 
 .brand-name {
@@ -70,7 +70,7 @@
 
 .nav-links a:hover,
 .nav-links a:focus {
-  background: rgba(0, 196, 216, 0.1);
+  background: rgb(0 196 216 / 10%);
   color: var(--fg);
   text-decoration-thickness: 2px;
 }

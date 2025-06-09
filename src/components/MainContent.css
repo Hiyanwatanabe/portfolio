@@ -1,6 +1,4 @@
-.app-layout > .main-content {
-  padding-top: 0;
-}
+
 
 .main-content {
   margin-left: 240px;
@@ -11,8 +9,12 @@
   height: auto !important;
 }
 
+.app-layout > .main-content {
+  padding-top: 0;
+}
+
 .main-content section {
-  margin: 0 0 2rem 0;
+  margin: 0 0 2rem;
   padding: 0;
   background: none !important;
   box-shadow: none !important;
@@ -20,7 +22,7 @@
 }
 
 .main-content section h2 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   color: var(--accent);
   text-align: left;
 }
@@ -28,7 +30,7 @@
 .main-content section p,
 .main-content section ul,
 .main-content section .contact-links {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.5rem;
   color: var(--fg);
   line-height: 1.7;
 }
@@ -38,6 +40,7 @@
   transform: translateY(20px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
+
 .fade-in.visible {
   opacity: 1;
   transform: translateY(0);

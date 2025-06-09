@@ -3,7 +3,7 @@
   box-shadow: none;
   backdrop-filter: none;
   padding: 2rem 0;
-  margin: 0 0 2rem 0;
+  margin: 0 0 2rem;
 }
 
 .contact-item {
@@ -18,7 +18,7 @@
 .contact-section h2 {
   margin: 0 0 1rem;
   color: var(--accent);
-  font-family: "Poppins", sans-serif;
+  font-family: Poppins, sans-serif;
   text-align: left;
 }
 

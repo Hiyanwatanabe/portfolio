@@ -1,9 +1,8 @@
-src/App.css
-
 .app-layout {
   display: grid;
   grid-template-columns: 240px 1fr; 
 }
+
 .main-content {
   max-width: 800px;    /* or whatever width feels right */
   margin: 0 auto;      /* center it in its grid cell */

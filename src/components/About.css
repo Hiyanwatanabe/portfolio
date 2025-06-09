@@ -36,7 +36,7 @@
   height: 270px;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 30%);
 }
 
 .square-img {
@@ -80,7 +80,7 @@
   filter: brightness(1.1);
 }
 
-@media (max-width: 800px) {
+@media (width <= 800px) {
   .about-content-wrapper {
     flex-direction: column;
     align-items: center;
