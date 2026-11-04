@@ -40,7 +40,7 @@ export const experience: Experience[] = [
         body: "Contact-center and telecom systems, routing and IVR configuration, vendor platforms, and working with operations and finance to turn requirements into working tools.",
       },
     ],
-    projects: ["tf4", "communication-systems", "infrastructure-automation", "data-engineering"],
+    projects: ["tf4", "auto-invoice", "communication-systems", "infrastructure-automation", "data-engineering"],
     stack: ["Python", "Flask", "JavaScript", "Next.js", "SQL", "MySQL", "AWS", "Linux", "REST APIs"],
   },
   {

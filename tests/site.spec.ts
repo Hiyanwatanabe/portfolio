@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const slugs = ["tf4", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
+const slugs = ["tf4", "auto-invoice", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
 
 test("home: identity, sections and no console errors", async ({ page }) => {
   const errors: string[] = [];
@@ -64,7 +64,7 @@ test("mobile menu opens and navigates", async ({ page, isMobile }) => {
 });
 
 test("accessibility: no serious axe violations", async ({ page }) => {
-  for (const path of ["./", "./work/tf4", "./work/cognisense", "./work/this-portfolio"]) {
+  for (const path of ["./", "./work/tf4", "./work/auto-invoice", "./work/cognisense", "./work/this-portfolio"]) {
     await page.goto(path);
     await page.evaluate(() => document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-visible")));
     await page.waitForTimeout(800);
@@ -108,7 +108,7 @@ test("confidentiality: no internal names or old contact details in the page or b
       if (line.trim() && !line.startsWith("#")) banned.push(new RegExp(line.trim(), "i"));
     }
   }
-  const urls = ["./", ...["tf4", "communication-systems", "infrastructure-automation", "data-engineering"].map((s) => `./work/${s}`)];
+  const urls = ["./", ...["tf4", "auto-invoice", "communication-systems", "infrastructure-automation", "data-engineering"].map((s) => `./work/${s}`)];
   for (const u of urls) {
     await page.goto(u);
     const html = await page.content();
@@ -131,4 +131,23 @@ test("TF4 deep dive: patterns render and the two-key switch arms only with both 
   await page.getByRole("switch", { name: /execute=True/ }).click();
   await expect(status).toContainText("ARMED");
   await expect(page.locator(".dd-code pre")).toContainText("run_scan");
+});
+
+test("Auto-Invoice demos: rules playground, mapping cascade and saga respond", async ({ page }) => {
+  await page.goto("./work/auto-invoice#patterns");
+  const lines = page.locator(".ai-table tbody tr");
+  await expect(lines).toHaveCount(2);
+  await page.getByRole("switch", { name: /group_by/ }).click();
+  await expect(lines).toHaveCount(1);
+  await page.getByLabel("Minimum minutes filter").fill("30");
+  await expect(page.locator(".ai-pipeline")).toContainText("1 after filters");
+
+  const code = page.locator("#ai-map-code");
+  await code.fill("ZX204");
+  await expect(page.locator(".ai-map-trace li[data-hit='true']")).toContainText("Client C");
+  await code.fill("OMEGA-9");
+  await expect(page.locator(".ai-map-trace li[data-hit='true']")).toContainText("Unmapped");
+
+  await page.getByRole("button", { name: "Ledger insert fails" }).click();
+  await expect(page.locator(".ai-saga-out")).toContainText("Compensation deleted the lines", { timeout: 6000 });
 });

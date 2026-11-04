@@ -5,7 +5,7 @@
 // still leaves out counts, provider names, number data, target strategy and screenshots.
 // Research and independent projects are public and carry full technical depth.
 
-export type VisualKey = "spec" | "tf4" | "cognisense" | "market" | "portfolio";
+export type VisualKey = "spec" | "tf4" | "autoinvoice" | "cognisense" | "market" | "portfolio";
 export type Layer = "frontend" | "api" | "backend" | "data" | "infra";
 
 type Base = {
@@ -33,7 +33,7 @@ export type ConfidentialProject = Base & {
 export type PublicProject = Base & {
   confidential: false;
   image?: "cognisense";
-  deepDive?: "tf4"; // extra engineering-patterns section on the case-study page
+  deepDive?: "tf4" | "auto-invoice"; // extra engineering-patterns section on the case-study page
   spec?: [string, string][]; // spec sheet shown under the case-study header
   problem: string;
   approach: string[];
@@ -111,6 +111,63 @@ export const projects: Project[] = [
       "In daily production use on AWS EC2 behind Nginx",
       "Full stack owned end to end: schema, services, interface, deployment and operations",
       "Automated test suite with pytest",
+    ],
+  },
+  {
+    slug: "auto-invoice",
+    confidential: false,
+    deepDive: "auto-invoice",
+    title: "Auto-Invoice",
+    kicker: "Rules-driven invoicing platform with operator and client portals",
+    summary:
+      "A full-stack TypeScript platform that ingests usage spreadsheets from Google Drive, runs them through a declarative pricing-rules engine, and turns the result into invoices, ledger entries and versioned PDFs, with separate operator and client portals behind role-based access.",
+    context: "Professional",
+    org: employer,
+    period: "2025 — 2026",
+    role: "Primary developer",
+    stack: ["TypeScript", "Next.js 16", "React 19", "Supabase (Postgres · Auth · Storage)", "Google OAuth", "Drive API", "SheetJS", "pdf-lib", "Tailwind CSS"],
+    layers: ["frontend", "api", "backend", "data", "infra"],
+    visual: "autoinvoice",
+    spec: [
+      ["Framework", "Next.js 16 App Router · React 19"],
+      ["Language", "TypeScript end to end"],
+      ["Data", "Supabase Postgres · Storage buckets"],
+      ["Auth", "Supabase Auth · SSR cookie sessions"],
+      ["Ingest", "Google OAuth 2.0 · Drive API · XLSX"],
+      ["Engine", "Declarative JSON pricing rules"],
+      ["Documents", "pdf-lib rendering · versioned storage"],
+      ["Access", "Operator / client roles · route + API guards"],
+    ],
+    problem:
+      "Invoicing from usage data starts with a folder of daily spreadsheets and ends with a document a client will check line by line. Every client is billed under different rules, spreadsheets arrive late or get re-exported, and an invoice that is wrong, duplicated or missing a day is expensive to unwind. The job was to make the whole path from raw file to finished invoice repeatable, auditable and safe to re-run.",
+    approach: [
+      "Usage data comes straight from Google Drive. Each user connects Drive with OAuth; an ingest route lists the folder, parses each workbook with SheetJS, normalizes rows and upserts them in chunks keyed on (user, date, campaign, source file), so importing the same file twice changes nothing.",
+      "Imports are incremental: a per-user cursor on file modification time means only new or re-exported files are read. The cursor only advances after a run that actually imported something, so an empty or failed run can never skip data (a bug I found and fixed in production: cursor poisoning).",
+      "Billing rules are data, not code. Each client has a JSON template the engine evaluates in five stages: header aliases, filters, grouping, metrics (COUNT, COUNT_WHERE, SUM_COLUMN) and pricing blocks whose quantities are tokens such as {{billable_events}}, with minimum floors, rounding and tax.",
+      "Creating an invoice previews first with the same engine, refuses a second invoice for the same client and period (HTTP 409), then writes the invoice, its lines and a ledger entry, compensating (deleting) earlier writes if a later one fails. The PDF is rendered with pdf-lib and stored as a new document version.",
+    ],
+    features: [
+      "Google Drive connection with OAuth and folder selection",
+      "Incremental and full-resync spreadsheet ingest",
+      "Rules-driven pricing templates per client",
+      "Campaign-to-client mapping: exact, prefix and regex rules",
+      "Live invoice preview before anything is written",
+      "Duplicate-period guard and compensating rollback",
+      "Ledger entries and recorded payments per invoice",
+      "Versioned PDF documents in object storage",
+      "Operator portal: clients, team, templates, generation",
+      "Client portal: their invoices and documents only",
+    ],
+    challenges: [
+      { title: "Idempotent by construction", body: "Re-running an import or retrying a request must never double-count. Composite conflict keys on upsert and the duplicate-period guard make every write safe to repeat." },
+      { title: "No partial invoices", body: "Postgres writes go through a REST client without one wrapping transaction, so the create flow is a small saga: each step has a compensating delete that runs if a later step fails." },
+      { title: "Rules people can change", body: "Pricing differs per client and changes over time. Putting it in a typed JSON DSL with a pure evaluator means new rules are a template edit, and the same function powers preview and final invoice." },
+      { title: "Two audiences, one app", body: "Operators and clients share one codebase but get different areas: sessions refresh in a Next.js proxy, pages are guarded by role, and API handlers re-check the caller before touching data." },
+    ],
+    outcomes: [
+      "From raw spreadsheet to finished invoice PDF in one flow",
+      "Imports and invoice creation safe to re-run",
+      "Separate operator and client portals on one codebase",
     ],
   },
   {

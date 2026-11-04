@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, Info } from "../components/Icons";
 import { cognisenseShots, ProjectDiagram } from "../components/ProjectVisual";
+import { AutoInvoiceDeepDive } from "../components/AutoInvoiceDeepDive";
+import { AutoInvoiceGallery } from "../components/AutoInvoiceScreens";
 import { Tf4DeepDive } from "../components/Tf4DeepDive";
 import { Tf4Mock } from "../components/Tf4Mock";
 import type { ConfidentialProject, PublicProject } from "../data/projects";
@@ -90,10 +92,10 @@ function PublicBody({ p }: { p: PublicProject }) {
         </figure>
       </section>
 
-      {p.deepDive === "tf4" && (
+      {p.deepDive && (
         <section className="cs-section reveal" id="patterns" aria-labelledby="h-patterns">
           <h2 id="h-patterns">Engineering patterns</h2>
-          <Tf4DeepDive />
+          {p.deepDive === "tf4" ? <Tf4DeepDive /> : <AutoInvoiceDeepDive />}
         </section>
       )}
 
@@ -122,6 +124,7 @@ function PublicBody({ p }: { p: PublicProject }) {
             </figure>
           </div>
         )}
+        {p.deepDive === "auto-invoice" && <AutoInvoiceGallery />}
         {p.image === "cognisense" && (
           <div className="gallery" style={{ marginTop: "2rem" }}>
             {cognisenseShots.map((s) => (
