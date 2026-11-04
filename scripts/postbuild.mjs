@@ -25,7 +25,8 @@ writeFileSync(
 );
 writeFileSync("dist/robots.txt", `User-agent: *\nAllow: /\nSitemap: ${siteUrl}sitemap.xml\n`);
 
-// A custom domain needs a CNAME file at the root of the published site.
-if (!host.endsWith(".github.io")) writeFileSync("dist/CNAME", `${host}\n`);
+// A GitHub Pages custom domain needs a CNAME file. Not needed on github.io or Cloudflare Pages.
+const needsCname = !host.endsWith(".github.io") && !host.endsWith(".pages.dev");
+if (needsCname) writeFileSync("dist/CNAME", `${host}\n`);
 
-console.log(`postbuild: ${siteUrl} · 404.html + sitemap (${urls.length} urls) + robots${host.endsWith(".github.io") ? "" : " + CNAME"}`);
+console.log(`postbuild: ${siteUrl} · 404.html + sitemap (${urls.length} urls) + robots${needsCname ? " + CNAME" : ""}`);

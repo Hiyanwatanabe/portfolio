@@ -64,14 +64,21 @@ Faces are only cropped and resized, never retouched.
 
 Overwrite `public/Hiyan_Kubagawa_Resume.pdf` (or change `resume` in `src/data/profile.ts`).
 
-## Deploy (only when you decide to)
+## Deploy
 
-The live site is the `gh-pages` branch. `npm run deploy` builds and pushes `dist/` to it with `gh-pages`.
-Merge the `redesign` branch into `main` first if you want the source there too. `base` in `vite.config.ts`
-must match the repository name (`/portfolio/`).
+The site is hosted on **Cloudflare Pages** at <https://hiyaners.pages.dev/> (project `hiyaners`).
 
-Deep links like `/portfolio/work/cognisense` work because the build copies `index.html` to `404.html`, which GitHub
-Pages serves for unknown paths.
+```bash
+npx wrangler login     # once per machine, opens Cloudflare in the browser
+npm run deploy         # build + upload dist/ to Cloudflare Pages
+```
+
+The old GitHub Pages address (`hiyanwatanabe.github.io/portfolio/`) serves only a redirect page
+(`redirect/`), published with `npm run deploy:github-redirect`. It forwards every old link, including deep
+links, to the same page on the new domain.
+
+Deep links work because each case study is built as a real `work/<slug>/index.html`, with `404.html` as a
+fallback. `public/_headers` sets security headers and long-term caching for hashed assets.
 
 ## Content rules
 
@@ -85,7 +92,7 @@ Pages serves for unknown paths.
 - No skill percentages and no invented metrics.
 - Remember the repository is public: comments, commit messages and history are published too.
 
-## Custom domain
+## Moving the site
 
 `site.config.json` holds the public address (`siteUrl`). Everything else follows from it at build time:
 Vite's base path, canonical/Open Graph/JSON-LD URLs, `sitemap.xml`, `robots.txt`, and a `CNAME` file when
