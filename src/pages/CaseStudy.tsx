@@ -1,15 +1,20 @@
+import { lazy, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, Info } from "../components/Icons";
 import { cognisenseShots, ProjectDiagram } from "../components/ProjectVisual";
-import { AutoInvoiceDeepDive } from "../components/AutoInvoiceDeepDive";
-import { AutoInvoiceGallery } from "../components/AutoInvoiceScreens";
-import { Tf4DeepDive } from "../components/Tf4DeepDive";
 import { Tf4Mock } from "../components/Tf4Mock";
 import type { ConfidentialProject, PublicProject } from "../data/projects";
 import { projects } from "../data/projects";
 import { useActiveSection, useMeta, useReveal } from "../hooks";
 import { SpecVisual } from "../visuals/SpecVisual";
+import { caseStudyUpdated, metaFor } from "../seo";
 import NotFound from "./NotFound";
+
+// The interactive demos load only on the pages that show them.
+const Tf4DeepDive = lazy(() => import("../components/Tf4DeepDive").then((m) => ({ default: m.Tf4DeepDive })));
+const AutoInvoiceDeepDive = lazy(() => import("../components/AutoInvoiceDeepDive").then((m) => ({ default: m.AutoInvoiceDeepDive })));
+const AutoInvoiceGallery = lazy(() => import("../components/AutoInvoiceScreens").then((m) => ({ default: m.AutoInvoiceGallery })));
+const demoFallback = <div className="demo-loading mono" aria-hidden>Loading interactive demo…</div>;
 
 const publicSections = [
   { id: "problem", label: "The problem" },
@@ -95,7 +100,7 @@ function PublicBody({ p }: { p: PublicProject }) {
       {p.deepDive && (
         <section className="cs-section reveal" id="patterns" aria-labelledby="h-patterns">
           <h2 id="h-patterns">Engineering patterns</h2>
-          {p.deepDive === "tf4" ? <Tf4DeepDive /> : <AutoInvoiceDeepDive />}
+          <Suspense fallback={demoFallback}>{p.deepDive === "tf4" ? <Tf4DeepDive /> : <AutoInvoiceDeepDive />}</Suspense>
         </section>
       )}
 
@@ -124,7 +129,11 @@ function PublicBody({ p }: { p: PublicProject }) {
             </figure>
           </div>
         )}
-        {p.deepDive === "auto-invoice" && <AutoInvoiceGallery />}
+        {p.deepDive === "auto-invoice" && (
+          <Suspense fallback={demoFallback}>
+            <AutoInvoiceGallery />
+          </Suspense>
+        )}
         {p.image === "cognisense" && (
           <div className="gallery" style={{ marginTop: "2rem" }}>
             {cognisenseShots.map((s) => (
@@ -173,11 +182,7 @@ export default function CaseStudy() {
       ? [...publicSections.slice(0, 2), { id: "patterns", label: "Engineering patterns" }, ...publicSections.slice(2)]
       : publicSections;
   const active = useActiveSection(p ? sections.map((s) => s.id) : []);
-  useMeta(
-    p ? `${p.title}: ${p.kicker} · Hiyan Kubagawa` : "Not found · Hiyan Kubagawa",
-    p ? p.summary : "This page does not exist.",
-    p ? `work/${p.slug}/` : "",
-  );
+  useMeta(metaFor(p ? `/work/${p.slug}/` : "/404/"));
   if (!p) return <NotFound />;
 
   const next = projects[(index + 1) % projects.length];
@@ -191,12 +196,36 @@ export default function CaseStudy() {
         <p className="cs-kicker">{p.kicker}</p>
         <h1>{p.title}</h1>
         <p className="cs-summary">{p.summary}</p>
+        <p className="cs-byline mono">
+          Case study by <Link to="/about/">Hiyan Kubagawa</Link> · updated {caseStudyUpdated}
+        </p>
         <dl className="cs-facts">
           <div><dt>Context</dt><dd>{p.context} · {p.org}</dd></div>
           <div><dt>Role</dt><dd>{p.role}</dd></div>
-          <div><dt>Period</dt><dd>{p.period}</dd></div>
+          <div><dt>Period</dt><dd>{p.period}{p.brief?.status ? ` · ${p.brief.status}` : ""}</dd></div>
           <div><dt>Stack</dt><dd>{p.stack.slice(0, 5).join(", ")}</dd></div>
         </dl>
+        {p.brief && (
+          <section className="brief" aria-labelledby="h-brief">
+            <h2 id="h-brief" className="brief-title mono">
+              <span className="brief-led" aria-hidden /> At a glance
+            </h2>
+            <ol className="brief-steps">
+              <li>
+                <span className="mono">01 · Problem</span>
+                <p>{p.brief.problem}</p>
+              </li>
+              <li>
+                <span className="mono">02 · Solution</span>
+                <p>{p.brief.solution}</p>
+              </li>
+              <li>
+                <span className="mono">03 · Impact</span>
+                <p>{p.brief.impact}</p>
+              </li>
+            </ol>
+          </section>
+        )}
         {!p.confidential && p.spec && (
           <dl className="spec-sheet" aria-label="Technical specification">
             {p.spec.map(([k, v]) => (
@@ -241,7 +270,7 @@ export default function CaseStudy() {
 
       <div className="cs-next">
         <div className="container">
-          <Link to={`/work/${next.slug}`}>
+          <Link to={`/work/${next.slug}/`}>
             <span className="mono">Next</span>
             <strong>{next.title} →</strong>
             <span className="muted">{next.kicker}</span>

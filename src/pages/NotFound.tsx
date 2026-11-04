@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useMeta } from "../hooks";
+import { metaFor } from "../seo";
 
 export default function NotFound() {
-  useMeta("Not found · Hiyan Kubagawa", "This page does not exist.");
+  useMeta(metaFor("/404/"));
   return (
     <section className="section">
       <div className="container">

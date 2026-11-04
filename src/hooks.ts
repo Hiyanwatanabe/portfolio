@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { Meta } from "./seo";
 
 /** Adds `is-visible` once an element scrolls into view. Content is visible without JS. */
 export function useReveal<T extends HTMLElement>() {
@@ -40,8 +41,9 @@ export function useReducedMotion() {
   );
 }
 
-/** Title, description and canonical URL per route. */
-export function useMeta(title: string, description: string, path = "") {
+/** Title, description, canonical and share card per route (kept in sync on client-side navigation). */
+export function useMeta(meta: Meta) {
+  const { title, description, path, image, type } = meta;
   useEffect(() => {
     document.title = title;
     const set = (sel: string, attr: string, value: string) => document.querySelector(sel)?.setAttribute(attr, value);
@@ -50,8 +52,10 @@ export function useMeta(title: string, description: string, path = "") {
     set('meta[property="og:title"]', "content", title);
     set('meta[property="og:description"]', "content", description);
     set('meta[property="og:url"]', "content", url);
+    set('meta[property="og:type"]', "content", type);
+    set('meta[property="og:image"]', "content", `${__SITE_URL__}${image}`);
     set('link[rel="canonical"]', "href", url);
-  }, [title, description, path]);
+  }, [title, description, path, image, type]);
 }
 
 /** Which of the given section ids is currently in view (for nav highlighting). */

@@ -21,6 +21,10 @@ type Base = {
   layers: Layer[]; // which parts of the stack this project demonstrates
   visual: VisualKey;
   links?: { label: string; href: string }[];
+  seoTitle?: string; // page title before " | Hiyan Kubagawa"
+  seoDescription?: string;
+  // Executive summary shown before the architecture: readable in under a minute.
+  brief?: { problem: string; solution: string; impact: string; status?: string };
 };
 
 export type ConfidentialProject = Base & {
@@ -53,6 +57,15 @@ export const projects: Project[] = [
     deepDive: "tf4",
     title: "TF4",
     kicker: "Toll-free inventory automation platform",
+    seoTitle: "TF4: Toll-Free Inventory Automation",
+    seoDescription:
+      "TF4 case study: a production toll-free inventory automation platform designed, built and operated by Hiyan Kubagawa with Python, Flask, AWS and Linux.",
+    brief: {
+      problem: "Checking and managing toll-free number inventory by hand meant repeated portal lookups, spreadsheets and decisions made on stale data.",
+      solution: "One authenticated Flask platform that generates candidates, checks them against the provider's API, reconciles owned inventory and records every run, with resumable background jobs.",
+      impact: "Replaced a manual, spreadsheet-driven workflow with one audited system in daily production use. Anything that changes real inventory sits behind two independent safety switches.",
+      status: "In daily production use",
+    },
     summary:
       "An authenticated full-stack platform that scans, classifies, reserves and reconciles high-volume toll-free number inventory through a provider REST API, with resumable background jobs, run history, role-based access and production safeguards.",
     context: "Professional",
@@ -119,6 +132,14 @@ export const projects: Project[] = [
     deepDive: "auto-invoice",
     title: "Auto-Invoice",
     kicker: "Rules-driven invoicing platform with operator and client portals",
+    seoTitle: "Auto-Invoice: Next.js Invoicing Platform",
+    seoDescription:
+      "Auto-Invoice case study: a full-stack TypeScript invoicing platform by Hiyan Kubagawa, with Google Drive ingest, a pricing-rules engine, versioned PDFs and role-based portals.",
+    brief: {
+      problem: "Turning daily usage spreadsheets into invoices under different rules for every client is repetitive, and an invoice that is wrong, duplicated or missing a day is expensive to unwind.",
+      solution: "A Next.js and Supabase platform that ingests spreadsheets from Google Drive, prices them with declarative per-client rules, and produces invoices, ledger entries and versioned PDFs.",
+      impact: "One repeatable flow from raw spreadsheet to finished invoice. Imports and invoice creation are safe to re-run, rule changes are template edits rather than code changes, and clients only ever see their own documents.",
+    },
     summary:
       "A full-stack TypeScript platform that ingests usage spreadsheets from Google Drive, runs them through a declarative pricing-rules engine, and turns the result into invoices, ledger entries and versioned PDFs, with separate operator and client portals behind role-based access.",
     context: "Professional",
@@ -256,6 +277,15 @@ export const projects: Project[] = [
     confidential: false,
     title: "CogniSense",
     kicker: "Real-time cognitive load research platform",
+    seoTitle: "CogniSense: EEG Cognitive-Load Research Platform",
+    seoDescription:
+      "CogniSense case study: a real-time cognitive-load research system using EEG, FastAPI WebSockets and a Next.js dashboard, with Hiyan Kubagawa as technical project lead.",
+    brief: {
+      problem: "Researchers wanted to measure how demanding a task is while it happens, which means putting a 500 Hz brain-signal stream, emotion estimates and survey answers on one timeline.",
+      solution: "A Python service that computes a live EEG band-power ratio and streams it over WebSockets to a Next.js dashboard, plus gamified tasks, a NASA-TLX survey and a combined PDF report.",
+      impact: "A working end-to-end system used in live trials, with documented setup and test procedures so sessions are repeatable.",
+      status: "Completed May 2025",
+    },
     summary:
       "A multimodal research application that estimates mental workload from live EEG, facial expression and NASA-TLX surveys while participants complete controlled tasks.",
     context: "Research",
@@ -298,13 +328,14 @@ export const projects: Project[] = [
     confidential: false,
     title: "This Portfolio",
     kicker: "A small, carefully engineered frontend",
+    seoTitle: "This Portfolio: React and TypeScript Frontend Case Study",
     summary:
       "The site you're on: a typed, data-driven React application with its own design system, an accessible interactive component, hand-built SVG diagrams and an automated test suite.",
     context: "Independent",
     org: "Personal project",
     period: "2026",
     role: "Design and development",
-    stack: ["React 19", "TypeScript", "Vite", "CSS", "React Router", "Playwright", "axe-core", "Python (Pillow)"],
+    stack: ["React 19", "TypeScript", "Vite", "CSS", "React Router", "Playwright", "axe-core", "Python (Pillow)", "Cloudflare Pages"],
     layers: ["frontend", "infra"],
     visual: "portfolio",
     problem:
@@ -313,7 +344,7 @@ export const projects: Project[] = [
       "Content lives in typed data files, separate from the components that render it, so text, projects and images change without touching layout code.",
       "The design system is a single stylesheet built on CSS custom properties: a fluid type scale, a spacing scale and a small set of components. The 'lane lines' motif comes from competitive swimming.",
       "Diagrams are React components that draw SVG, so they stay sharp at any size and can animate without a charting library. The 'Interface to infrastructure' explorer follows the WAI-ARIA tabs pattern, with arrow-key navigation.",
-      "Photos go through a Python pipeline that crops and converts them to responsive WebP. A Playwright suite checks every route, horizontal overflow from 320 px up, links, the mobile menu and axe accessibility rules on desktop and mobile.",
+      "Every route is pre-rendered at build time and hydrated in the browser, so search engines and link previews get the real page. Photos go through a Python pipeline that crops and converts them to responsive WebP. A Playwright suite checks every route, horizontal overflow from 320 px up, links, the mobile menu and axe accessibility rules on desktop and mobile.",
     ],
     features: [
       "Typed content model, separated from components",
@@ -322,14 +353,17 @@ export const projects: Project[] = [
       "SVG diagrams and one-time signature animation",
       "Reduced-motion support throughout",
       "Responsive images in WebP",
-      "SEO metadata, JSON-LD, sitemap",
+      "Pre-rendered HTML with per-page metadata and share images",
+      "Light and dark themes, chosen per visitor",
+      "Structured data (Person, ProfilePage, TechArticle), sitemap",
       "Playwright + axe test suite",
     ],
     challenges: [
       { title: "Motion that never hides content", body: "Everything is readable with JavaScript or animation off. Reveal effects only add polish on top." },
-      { title: "Static hosting, real routes", body: "GitHub Pages has no server routing, so the build ships a 404 fallback that boots the app on the requested path." },
+      { title: "Static hosting, real pages", body: "The build renders every route to HTML with React's prerender API, including the lazily loaded demos, and writes each page's own title, canonical, share image and structured data. React then hydrates the page instead of building it from nothing." },
+      { title: "Two themes, one set of consoles", body: "Light mode flips the page's design tokens but keeps diagrams, code and demos dark, so the technical visuals read the same in both themes. A tiny inline script applies the stored choice before first paint." },
     ],
-    outcomes: ["About 110 KB of compressed JavaScript", "Automated checks at six viewport widths"],
+    outcomes: ["Every page readable without JavaScript, with its own metadata", "About 120 KB of compressed JavaScript; demos load only where they're used", "Automated checks at six viewport widths, in both themes"],
     links: [{ label: "Source on GitHub", href: "https://github.com/Hiyanwatanabe/portfolio" }],
   },
   {
@@ -337,6 +371,7 @@ export const projects: Project[] = [
     confidential: false,
     title: "Market Hunter",
     kicker: "Algorithmic trading research engine (paper trading only)",
+    seoTitle: "Market Hunter: Algorithmic Trading Research Engine",
     summary:
       "An independent, evidence-first research engine for testing intraday strategies against historical data and a paper-trading account, built to reject strategies that don't survive honest validation.",
     context: "Independent",

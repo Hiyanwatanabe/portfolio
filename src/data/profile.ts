@@ -17,15 +17,33 @@ export const profile = {
   resume: "Hiyan_Kubagawa_Resume.pdf",
   siteUrl: __SITE_URL__, // from site.config.json
 
-  headline: "I build the software and systems behind real-world operations.",
+  headline: "I design, build and operate web applications, APIs and business automation.",
   lede:
-    "Full-stack applications, the APIs and data that connect them, and the servers and cloud they run on. I write the code, administer the systems, and automate the work in between, so the whole thing stays reliable.",
+    "From React and Next.js interfaces to Python, SQL, AWS and Linux infrastructure. I'm currently building and supporting production systems at National Sales Partners in Cleveland, Ohio.",
 
-  credentials: [
-    { label: "Now", value: "IT Administrator (Software & Automation), National Sales Partners" },
-    { label: "Degree", value: "B.S. Computer Science, Cum Laude, Gannon University" },
-    { label: "Cloud", value: "AWS Certified Cloud Practitioner" },
-    { label: "Athletics", value: "NCAA Division II swimmer, two school records" },
+  // Three quick proofs right under the intro, each pointing at the evidence.
+  proofs: [
+    {
+      label: "Production engineering",
+      title: "Systems a business runs on",
+      body: "Applications and automation in live business use, which I build, deploy and support.",
+      href: "#work",
+      cta: "See the case studies",
+    },
+    {
+      label: "End-to-end ownership",
+      title: "Interface to infrastructure",
+      body: "Frontend, APIs, databases, deployment, and the Linux and AWS servers underneath.",
+      href: "#stack",
+      cta: "Explore the layers",
+    },
+    {
+      label: "Education & credentials",
+      title: "B.S. CS, Cum Laude",
+      body: "Gannon University, 2025 · AWS Certified Cloud Practitioner · Google Data Analytics.",
+      href: "#education",
+      cta: "Verify credentials",
+    },
   ],
 
   languages: [
@@ -36,11 +54,12 @@ export const profile = {
 } as const;
 
 export const about = {
-  title: "Engineering, at the pace of real operations",
+  title: "Beyond the code",
+  // Short version for the home page; the full story lives on /about/.
   paragraphs: [
-    "I grew up in São Paulo, a Brazilian of Japanese descent, and came to the United States to study Computer Science at Gannon University while swimming for its NCAA Division II team. Training twice a day next to a full course load teaches you to plan your week in splits and to trust repetition over inspiration.",
-    "What draws me to engineering is the moment a system starts behaving predictably. In my senior year that meant getting an EEG headset, a Python signal pipeline and a web dashboard to agree on time. Today it means building the application people work in every day, and keeping the servers, integrations and data underneath it healthy.",
-    "I like working on both sides of that line. A good interface is worth little if the system behind it is fragile, and a solid system is wasted if nobody can use it.",
+    "I'm from São Paulo, Brazil, of Japanese descent, and came to the United States to study Computer Science at Gannon University while swimming for its NCAA Division II team. I graduated Cum Laude in May 2025. Balancing training, coursework and technical projects taught me preparation, consistency and continuous improvement, and I still work that way.",
+    "I've always wanted to understand how things work: how systems communicate, why problems happen, and how to fix them for good. I enjoy building a clean, functional interface just as much as the backend logic and infrastructure behind it.",
+    "To me, engineering isn't just making something work. It's understanding why it works, how its parts interact, how it behaves when things go wrong, and how to make it more dependable.",
   ],
   quote: {
     text: "Swimming is more than just winning competitions; it's about the journey of discipline, resiliency, and victories shared with my team.",
@@ -50,5 +69,5 @@ export const about = {
 
 export const contact = {
   title: "Let's solve something difficult.",
-  body: "I build applications, connect systems and solve the technical problems that matter to the people using them. From the interface to the infrastructure behind it, I bring a practical engineering mindset, and I'd like to hear what you're working on.",
+  body: "Interested in full-stack development, systems automation or infrastructure engineering? I'd be glad to talk about how I can contribute. The fastest way to reach me is email or LinkedIn.",
 } as const;

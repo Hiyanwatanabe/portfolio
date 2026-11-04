@@ -24,7 +24,15 @@ JOBS = {
     # Diploma: name, degree, distinction and date only. Signatures and the university seal are cropped
     # out on purpose (public site). The source image is small, so this is also the largest version.
     "diploma": ("diploma.jpg", (0.0, 0.0, 1.0, 0.762), [484]),
+    # Certificates, uncropped: name, credential, dates and the issuer's own verification details.
+    "cert-aws": ("aws-cert.png", None, [484]),
+    "cert-google": ("google-cert.jpg", None, [640, 1287]),
+    # PSAC "Athlete of the Week" graphic, from the conference's Instagram post. Cropped to the title,
+    # photo and name, which also removes Instagram's on-screen buttons.
+    "psac-aotw": ("psac-aotw.jpg", (150 / 720, 89 / 810, 555 / 720, 768 / 810), [405]),
 }
+# Optional: only build the named images, e.g. `python scripts/optimize_images.py ../_orig_assets cert-aws`
+ONLY = set(sys.argv[2:])
 
 
 def crop(img, box):
@@ -35,6 +43,8 @@ def crop(img, box):
 
 
 for name, (file, box, widths) in JOBS.items():
+    if ONLY and name not in ONLY:
+        continue
     img = ImageOps.exif_transpose(Image.open(SRC / file)).convert("RGB")
     img = crop(img, box)
     for w in widths:
@@ -43,6 +53,9 @@ for name, (file, box, widths) in JOBS.items():
         out = OUT / f"{name}-{w}.webp"
         img.resize((w, h), Image.LANCZOS).save(out, "WEBP", quality=82, method=6)
         print(f"{out.name}: {w}x{h}, {out.stat().st_size // 1024} KB")
+
+if ONLY:
+    sys.exit(0)
 
 # Social preview (1200x630): portrait on the right of a dark panel is composed in og.py-free way:
 portrait = ImageOps.exif_transpose(Image.open(SRC / "portrait-navy.jpg")).convert("RGB")

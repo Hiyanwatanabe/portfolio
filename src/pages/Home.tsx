@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { HeroLanes, PaceRail } from "../components/HeroLanes";
-import { ArrowRight, ArrowUpRight, Copy, Download, Expand, GitHub, LinkedIn, Mail, Phone } from "../components/Icons";
+import { ArrowRight, ArrowUpRight, Copy, Download, Expand, GitHub, LinkedIn, Mail, Phone, Verified } from "../components/Icons";
 import { LaneLabel } from "../components/LaneLabel";
 import { ProjectPreview } from "../components/ProjectVisual";
 import { StackExplorer } from "../components/StackExplorer";
@@ -11,7 +11,12 @@ import { about, contact, profile } from "../data/profile";
 import { getProject, projects, type Project } from "../data/projects";
 import { skillGroups } from "../data/skills";
 import { useMeta, useReveal } from "../hooks";
+import { metaFor } from "../seo";
 import diploma from "../assets/img/diploma-484.webp";
+import certAws from "../assets/img/cert-aws-484.webp";
+import certGoogle640 from "../assets/img/cert-google-640.webp";
+import certGoogle1287 from "../assets/img/cert-google-1287.webp";
+import psacAotw from "../assets/img/psac-aotw-405.webp";
 import portrait480 from "../assets/img/portrait-480.webp";
 import portrait760 from "../assets/img/portrait-760.webp";
 import portrait960 from "../assets/img/portrait-960.webp";
@@ -47,13 +52,13 @@ function Hero() {
             <p className="hero-lede">{profile.lede}</p>
             <div className="hero-actions">
               <a className="btn btn-primary" href="#work">
-                Explore my work <ArrowRight />
+                View case studies <ArrowRight />
               </a>
               <a className="btn" href={resumeHref} target="_blank" rel="noopener">
-                <Download /> Download resume
+                <Download /> Download résumé
               </a>
-              <a className="btn" href="#contact">
-                <Mail /> Contact me
+              <a className="btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+                <LinkedIn /> LinkedIn
               </a>
             </div>
           </div>
@@ -80,10 +85,12 @@ function Hero() {
         </div>
         <PaceRail />
         <ul className="proof" aria-label="At a glance">
-          {profile.credentials.map((c) => (
+          {profile.proofs.map((c, i) => (
             <li key={c.label}>
-              <span className="mono">{c.label}</span>
-              <span>{c.value}</span>
+              <span className="mono"><span className="proof-n">{String(i + 1).padStart(2, "0")}</span> {c.label}</span>
+              <strong>{c.title}</strong>
+              <span className="proof-body">{c.body}</span>
+              <a className="link-arrow" href={c.href}>{c.cta} <ArrowRight /></a>
             </li>
           ))}
         </ul>
@@ -97,7 +104,7 @@ function Stack() {
   return (
     <section className="section" id="stack" ref={ref} aria-labelledby="stack-title">
       <div className="container">
-        <LaneLabel n="01">From interface to infrastructure</LaneLabel>
+        <LaneLabel n="02">From interface to infrastructure</LaneLabel>
         <div className="section-head reveal">
           <h2 id="stack-title">
             Both sides of the application, and the <span className="serif">systems</span> under it.
@@ -118,17 +125,17 @@ function Stack() {
 function WorkCard({ p }: { p: Project }) {
   return (
     <article className="work-card reveal" aria-labelledby={`wc-${p.slug}`}>
-      <Link to={`/work/${p.slug}`} className="work-card-visual" tabIndex={-1} aria-hidden>
+      <Link to={`/work/${p.slug}/`} className="work-card-visual" tabIndex={-1} aria-hidden>
         <ProjectPreview project={p} />
       </Link>
       <div className="work-card-body">
         <span className="mono muted">{p.period} · {p.role}</span>
         <h3 id={`wc-${p.slug}`}>
-          <Link to={`/work/${p.slug}`}>{p.title}</Link>
+          <Link to={`/work/${p.slug}/`}>{p.title}</Link>
         </h3>
         <p className="work-kicker">{p.kicker}</p>
         <p>{p.summary}</p>
-        <Link className="link-arrow" to={`/work/${p.slug}`}>
+        <Link className="link-arrow" to={`/work/${p.slug}/`}>
           Role &amp; scope <ArrowRight />
         </Link>
       </div>
@@ -145,7 +152,7 @@ function Work() {
   return (
     <section className="section" id="work" ref={ref} aria-labelledby="work-title">
       <div className="container">
-        <LaneLabel n="02">Selected work</LaneLabel>
+        <LaneLabel n="01">Selected work</LaneLabel>
         <div className="section-head reveal">
           <h2 id="work-title">Systems I've built, run and studied</h2>
           <p>
@@ -162,7 +169,7 @@ function Work() {
           <div className="work-list">
             {featuredWork.map((p) => (
               <article className="work reveal" aria-labelledby={`w-${p.slug}`} key={p.slug}>
-                <Link to={`/work/${p.slug}`} className="work-visual" tabIndex={-1} aria-hidden>
+                <Link to={`/work/${p.slug}/`} className="work-visual" tabIndex={-1} aria-hidden>
                   <span className="chip tag">Architecture</span>
                   <ProjectPreview project={p} />
                 </Link>
@@ -173,7 +180,7 @@ function Work() {
                     <span>{p.role}</span>
                   </div>
                   <h3 id={`w-${p.slug}`}>
-                    <Link to={`/work/${p.slug}`}>{p.title}</Link>
+                    <Link to={`/work/${p.slug}/`}>{p.title}</Link>
                   </h3>
                   <p className="work-kicker">{p.kicker}</p>
                   <p>{p.summary}</p>
@@ -182,7 +189,7 @@ function Work() {
                       <span className="chip" key={s}>{s}</span>
                     ))}
                   </div>
-                  <Link className="link-arrow" to={`/work/${p.slug}`}>
+                  <Link className="link-arrow" to={`/work/${p.slug}/`}>
                     {p.slug === "auto-invoice" ? "Architecture, live demos & screens" : "Architecture, patterns & code"} <ArrowRight />
                   </Link>
                 </div>
@@ -202,7 +209,7 @@ function Work() {
             <span className="chip chip-accent">Full technical depth</span>
           </div>
           <article className="work reveal" aria-labelledby="w-cognisense">
-            <Link to="/work/cognisense" className="work-visual" tabIndex={-1} aria-hidden>
+            <Link to="/work/cognisense/" className="work-visual" tabIndex={-1} aria-hidden>
               <span className="chip tag">Screenshots</span>
               <ProjectPreview project={cognisense} />
             </Link>
@@ -212,7 +219,7 @@ function Work() {
                 <span>{cognisense.period}</span>
               </div>
               <h3 id="w-cognisense">
-                <Link to="/work/cognisense">{cognisense.title}</Link>
+                <Link to="/work/cognisense/">{cognisense.title}</Link>
               </h3>
               <p className="work-kicker">{cognisense.kicker}</p>
               <p>{cognisense.summary}</p>
@@ -221,14 +228,14 @@ function Work() {
                   <span className="chip" key={s}>{s}</span>
                 ))}
               </div>
-              <Link className="link-arrow" to="/work/cognisense">
+              <Link className="link-arrow" to="/work/cognisense/">
                 Read the case study <ArrowRight />
               </Link>
             </div>
           </article>
           <div className="more-grid">
             {more.map((p) => (
-              <Link to={`/work/${p.slug}`} className="card reveal" key={p.slug}>
+              <Link to={`/work/${p.slug}/`} className="card reveal" key={p.slug}>
                 <span className="mono muted">{p.context} · {p.period}</span>
                 <h3>{p.title}</h3>
                 <p className="work-kicker">{p.kicker}</p>
@@ -290,7 +297,7 @@ function Experience() {
                 {e.projects && (
                   <div className="role-links">
                     {e.projects.map((slug) => (
-                      <Link className="link-arrow" key={slug} to={`/work/${slug}`}>
+                      <Link className="link-arrow" key={slug} to={`/work/${slug}/`}>
                         {getProject(slug)?.title} <ArrowRight />
                       </Link>
                     ))}
@@ -305,8 +312,11 @@ function Experience() {
   );
 }
 
+const SKILLS_SHOWN = 4;
+
 function Skills() {
   const ref = useReveal<HTMLElement>();
+  const [all, setAll] = useState(false);
   const tiers = [
     ["production", "Used in production at work"],
     ["projects", "Hands-on in projects & labs"],
@@ -327,15 +337,15 @@ function Skills() {
             </span>
           ))}
         </div>
-        <div className="skill-table">
-          {skillGroups.map((g) => (
-            <div className="skill-row reveal" key={g.title}>
+        <div className="skill-table" id="skill-table" data-all={all}>
+          {skillGroups.map((g, i) => (
+            <div className={`skill-row reveal${i >= SKILLS_SHOWN ? " skill-more" : ""}`} key={g.title}>
               <div className="skill-head">
                 <h3>{g.title}</h3>
                 <p className="skill-evidence">
                   <span className="mono">Seen in</span>
                   {g.evidence.map((slug) => (
-                    <Link key={slug} to={`/work/${slug}`}>{getProject(slug)?.title}</Link>
+                    <Link key={slug} to={`/work/${slug}/`}>{getProject(slug)?.title}</Link>
                   ))}
                 </p>
               </div>
@@ -352,6 +362,9 @@ function Skills() {
             </div>
           ))}
         </div>
+        <button type="button" className="btn skills-toggle" aria-expanded={all} aria-controls="skill-table" onClick={() => setAll((a) => !a)}>
+          {all ? "Show less" : `Show the full toolkit (${skillGroups.length - SKILLS_SHOWN} more groups)`}
+        </button>
       </div>
     </section>
   );
@@ -367,6 +380,9 @@ function About() {
           <div className="about-text reveal">
             <h2 id="about-title">{about.title}</h2>
             {about.paragraphs.map((p) => <p key={p.slice(0, 24)}>{p}</p>)}
+            <Link className="link-arrow" to="/about/">
+              Read the full story: from the pool to production <ArrowRight />
+            </Link>
             <div className="languages" aria-label="Languages">
               {profile.languages.map((l) => (
                 <div key={l.name}>
@@ -415,24 +431,37 @@ function About() {
   );
 }
 
-function DiplomaViewer() {
+type Credential = {
+  name: string; // dialog name
+  src: string;
+  srcSet?: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  cta?: string;
+  className?: string;
+};
+
+/** A credential thumbnail that opens full size in a modal dialog. */
+function CredentialViewer({ c }: { c: Credential }) {
   const dialog = useRef<HTMLDialogElement>(null);
   return (
     <>
-      <figure className="diploma">
+      <figure className={`diploma ${c.className ?? ""}`}>
         <button type="button" className="diploma-frame" onClick={() => dialog.current?.showModal()} aria-haspopup="dialog">
-          <img src={diploma} width={484} height={285} alt="Gannon University diploma conferring a Bachelor of Science in Computer Science, Cum Laude, on Hiyan Otavio Watanabe Kubagawa, May 10, 2025" loading="lazy" decoding="async" />
+          <img src={c.src} srcSet={c.srcSet} sizes="(max-width: 760px) 92vw, 420px" width={c.width} height={c.height} alt={c.alt} loading="lazy" decoding="async" />
           <span className="diploma-cta mono">
-            <Expand /> View credential
+            <Expand /> {c.cta ?? "View credential"}
           </span>
         </button>
-        <figcaption className="mono">Conferred May 10, 2025 · preview cropped for privacy</figcaption>
+        <figcaption className="mono">{c.caption}</figcaption>
       </figure>
-      <dialog ref={dialog} className="lightbox" aria-label="Diploma" onClick={(e) => e.target === dialog.current && dialog.current?.close()}>
+      <dialog ref={dialog} className="lightbox" aria-label={c.name} onClick={(e) => e.target === dialog.current && dialog.current?.close()}>
         <div className="lightbox-inner">
-          <img src={diploma} width={484} height={285} alt="Gannon University diploma, Bachelor of Science in Computer Science, Cum Laude, May 2025" />
+          <img src={c.src} srcSet={c.srcSet} sizes="(max-width: 860px) 92vw, 820px" width={c.width} height={c.height} alt={c.alt} />
           <div className="lightbox-bar">
-            <span className="mono">Gannon University · B.S. Computer Science · Cum Laude · 2025</span>
+            <span className="mono">{c.name}</span>
             <button type="button" className="btn" onClick={() => dialog.current?.close()} autoFocus>
               Close
             </button>
@@ -442,6 +471,48 @@ function DiplomaViewer() {
     </>
   );
 }
+
+const diplomaCredential: Credential = {
+  name: "Diploma",
+  src: diploma,
+  width: 484,
+  height: 285,
+  alt: "Gannon University diploma conferring a Bachelor of Science in Computer Science, Cum Laude, on Hiyan Otavio Watanabe Kubagawa, May 10, 2025",
+  caption: "Conferred May 10, 2025 · preview cropped for privacy",
+};
+
+const certImages: Record<string, Credential> = {
+  aws: {
+    name: "AWS Certified Cloud Practitioner certificate",
+    src: certAws,
+    width: 484,
+    height: 374,
+    alt: "AWS Certified Cloud Practitioner certificate for Hiyan Watanabe Kubagawa, issued August 22, 2025, expiring August 22, 2028, with its validation number",
+    caption: "Issued Aug 22, 2025 · expires Aug 22, 2028",
+    cta: "View certificate",
+  },
+  google: {
+    name: "Google Data Analytics Professional Certificate",
+    src: certGoogle640,
+    srcSet: `${certGoogle640} 640w, ${certGoogle1287} 1287w`,
+    width: 640,
+    height: 494,
+    alt: "Google Data Analytics Professional Certificate from Coursera for Hiyan Watanabe Kubagawa, May 23, 2025, listing eight completed courses",
+    caption: "Completed May 23, 2025 · 8 courses",
+    cta: "View certificate",
+  },
+};
+
+const psacCredential: Credential = {
+  name: "PSAC Swimming Athlete of the Week",
+  src: psacAotw,
+  width: 405,
+  height: 679,
+  alt: "PSAC Swimming Athlete of the Week graphic: Hiyan Kubagawa swimming butterfly in a Gannon cap",
+  caption: "Pennsylvania State Athletic Conference",
+  cta: "View announcement",
+  className: "diploma-tall",
+};
 
 function Credentials() {
   const ref = useReveal<HTMLElement>();
@@ -469,16 +540,29 @@ function Credentials() {
                 {education.coursework.map((c) => <span className="chip" key={c}>{c}</span>)}
               </div>
             </div>
-            <DiplomaViewer />
+            <CredentialViewer c={diplomaCredential} />
           </div>
           <div className="panel panel-cert reveal">
             <span className="mono">Certifications</span>
-            {certifications.map((c) => (
-              <div className="cert" key={c.name}>
-                <strong>{c.name}</strong>
-                <span>{c.issuer} · {c.date}{c.note ? ` · ${c.note}` : ""}</span>
-              </div>
-            ))}
+            <div className="cert-list">
+              {certifications.map((c) => (
+                <div className="cert" key={c.name}>
+                  <div className="cert-text">
+                    <strong>{c.name}</strong>
+                    <span>{c.issuer} · {c.date}{c.note ? ` · ${c.note}` : ""}</span>
+                    <a className="link-arrow cert-verify" href={c.verify.href} target="_blank" rel="noopener noreferrer">
+                      <Verified /> {c.verify.label} <ArrowUpRight />
+                    </a>
+                    {"code" in c.verify && (
+                      <span className="cert-code mono">
+                        Validation no. <code>{c.verify.code}</code>
+                      </span>
+                    )}
+                  </div>
+                  <CredentialViewer c={certImages[c.id]} />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="panel panel-ath reveal">
             <span className="mono">{athletics.level}</span>
@@ -502,6 +586,7 @@ function Credentials() {
               </div>
             ))}
             <p className="muted">{athletics.honors.join(" · ")}</p>
+            <CredentialViewer c={psacCredential} />
           </div>
         </div>
       </div>
@@ -563,15 +648,12 @@ function Contact() {
 }
 
 export default function Home() {
-  useMeta(
-    "Hiyan Kubagawa · Full-Stack Software Engineer & Systems Administrator",
-    "Hiyan Kubagawa is a full-stack software engineer and systems administrator in Cleveland, Ohio, building web applications, integrations and automation with Python, SQL, React, AWS and Linux.",
-  );
+  useMeta(metaFor("/"));
   return (
     <>
       <Hero />
-      <Stack />
       <Work />
+      <Stack />
       <Experience />
       <Skills />
       <About />

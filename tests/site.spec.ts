@@ -23,7 +23,7 @@ test("home: identity, sections and no console errors", async ({ page }) => {
 test("no horizontal overflow at common widths", async ({ page }) => {
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ["./", ...slugs.map((s) => `./work/${s}/`)]) {
+    for (const path of ["./", "./about/", ...slugs.map((s) => `./work/${s}/`)]) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `${path} at ${width}px`).toBeLessThanOrEqual(0);
@@ -150,4 +150,102 @@ test("Auto-Invoice demos: rules playground, mapping cascade and saga respond", a
 
   await page.getByRole("button", { name: "Ledger insert fails" }).click();
   await expect(page.locator(".ai-saga-out")).toContainText("Compensation deleted the lines", { timeout: 6000 });
+});
+
+// ---------- Pre-rendering: the HTML each URL serves, before any JavaScript ----------
+const allPages = ["", "about/", ...slugs.map((s) => `work/${s}/`)];
+
+test("every page is pre-rendered with its own title, canonical, share image and content", async ({ request, baseURL }) => {
+  const titles = new Set<string>();
+  for (const path of allPages) {
+    const html = await (await request.get(path)).text();
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? "";
+    const canonical = html.match(/<link rel="canonical" href="([^"]*)"/)?.[1] ?? "";
+    const ogImage = html.match(/<meta property="og:image" content="([^"]*)"/)?.[1] ?? "";
+    expect(titles.has(title), `duplicate title on ${path}`).toBe(false);
+    titles.add(title);
+    expect(canonical.endsWith(`/${path}`), `${path}: canonical ${canonical}`).toBe(true);
+    expect(html.match(/<h1[\s>]/g)?.length, `${path}: one h1 in the served HTML`).toBe(1);
+    expect(html, path).toMatch(/<script type="application\/ld\+json">/);
+    expect(html, path).toContain('<div id="root"><');
+    if (path.startsWith("work/")) {
+      expect(ogImage, path).toContain(`og/${path.split("/")[1]}.png`);
+      const img = await request.get(new URL(`og/${path.split("/")[1]}.png`, baseURL).href);
+      expect(img.status(), ogImage).toBe(200);
+    }
+  }
+});
+
+test("pre-rendered pages hydrate without errors, in both themes", async ({ page }) => {
+  for (const theme of ["dark", "light"]) {
+    for (const path of allPages) {
+      const errors: string[] = [];
+      const onConsole = (m: { type(): string; text(): string }) => m.type() === "error" && errors.push(m.text());
+      const onError = (e: Error) => errors.push(e.message);
+      page.on("console", onConsole);
+      page.on("pageerror", onError);
+      await page.addInitScript((t) => { try { localStorage.setItem("theme", t); } catch { /* ignore */ } }, theme);
+      await page.goto(`./${path}`, { waitUntil: "networkidle" });
+      expect(errors, `${theme} ${path}`).toEqual([]);
+      page.off("console", onConsole);
+      page.off("pageerror", onError);
+    }
+  }
+});
+
+test("theme switch toggles light mode and remembers it", async ({ page }) => {
+  await page.goto("./");
+  const html = page.locator("html");
+  await expect(html).not.toHaveAttribute("data-theme", "light");
+  await page.getByRole("button", { name: "Switch to light mode" }).click();
+  await expect(html).toHaveAttribute("data-theme", "light");
+  await page.reload();
+  await expect(html).toHaveAttribute("data-theme", "light");
+  // The technical panels stay dark in light mode.
+  await page.goto("./work/tf4/");
+  const bg = await page.locator(".dd-code").first().evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(bg).toBe("rgb(11, 17, 24)");
+  await page.getByRole("button", { name: "Switch to dark mode" }).click();
+  await expect(html).not.toHaveAttribute("data-theme", "light");
+});
+
+test("accessibility in light mode: no serious axe violations", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("theme", "light"));
+  for (const path of ["./", "./about/", "./work/tf4/", "./work/auto-invoice/"]) {
+    await page.goto(path);
+    await page.evaluate(() => document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-visible")));
+    await page.waitForTimeout(800);
+    const results = await new AxeBuilder({ page }).analyze();
+    const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(serious.map((v) => `${v.id}: ${v.nodes.length}`), path).toEqual([]);
+  }
+});
+
+test("certificates open in a viewer and link to the issuers' verification pages", async ({ page }) => {
+  await page.goto("./#education");
+  await expect(page.getByRole("link", { name: /Verify at aws.amazon.com/ })).toHaveAttribute("href", "https://aws.amazon.com/verification");
+  await expect(page.getByRole("link", { name: /Verify on Coursera/ })).toHaveAttribute("href", /coursera\.org\/verify\/professional-cert\//);
+  for (const name of ["AWS Certified Cloud Practitioner certificate", "Google Data Analytics Professional Certificate", "PSAC Swimming Athlete of the Week"]) {
+    const dialog = page.getByRole("dialog", { name });
+    await page.locator(".diploma-frame").filter({ has: page.locator(`xpath=following::dialog[1][@aria-label="${name}"]`) }).first().click();
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+  }
+});
+
+test("toolkit expands to show every group", async ({ page }) => {
+  await page.goto("./#skills");
+  const rows = page.locator(".skill-row");
+  const visible = async () => (await rows.evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== "none").length));
+  expect(await visible()).toBe(4);
+  await page.getByRole("button", { name: /Show the full toolkit/ }).click();
+  expect(await visible()).toBe(await rows.count());
+});
+
+test("about page tells the story and answers the basics", async ({ page }) => {
+  await page.goto("./about/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Hiyan Kubagawa");
+  await expect(page.getByText("Who is Hiyan Kubagawa?")).toBeVisible();
+  await expect(page.getByRole("link", { name: /TF4 case study/ })).toHaveAttribute("href", "/work/tf4/");
 });

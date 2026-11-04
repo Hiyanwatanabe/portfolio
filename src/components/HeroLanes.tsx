@@ -75,7 +75,7 @@ export function PaceRail() {
               stroke="rgb(111 214 201 / .6)"
               strokeWidth="1.2"
             />
-            <circle className="pace-node" style={{ animationDelay: `${4 + i * 0.12}s` }} cx={`${out + 0.6}%`} cy={y} r="4.5" fill="#0a0f15" stroke="#6fd6c9" strokeWidth="1.4" />
+            <circle className="pace-node" style={{ animationDelay: `${4 + i * 0.12}s`, fill: "var(--bg)" }} cx={`${out + 0.6}%`} cy={y} r="4.5" stroke="#6fd6c9" strokeWidth="1.4" />
           </g>
         ))}
       </svg>

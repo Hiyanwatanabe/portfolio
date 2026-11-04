@@ -78,7 +78,7 @@ export function StackExplorer() {
           <ul className="explorer-links">
             {evidence.map((p) => (
               <li key={p.slug}>
-                <Link to={`/work/${p.slug}`} className="link-arrow">
+                <Link to={`/work/${p.slug}/`} className="link-arrow">
                   {p.title} <ArrowRight />
                 </Link>
                 <span className="muted">{p.context}</span>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { profile } from "../data/profile";
 import { useActiveSection } from "../hooks";
-import { Download } from "./Icons";
+import { Download, Moon, Sun } from "./Icons";
 
 const nav = [
   { id: "work", label: "Work" },
@@ -16,14 +16,39 @@ export function BrandMark() {
   // Two lane ropes and the T at the wall; reads as an "H".
   return (
     <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden>
-      <rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="none" stroke="rgb(148 170 195 / .3)" />
-      <g stroke="#6fd6c9" strokeWidth="2" strokeLinecap="round">
+      <rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="none" style={{ stroke: "var(--line-strong)" }} />
+      <g style={{ stroke: "var(--accent)" }} strokeWidth="2" strokeLinecap="round">
         <path d="M10 9v14M22 9v14M10 16h12" />
       </g>
-      <g stroke="rgb(148 170 195 / .55)" strokeWidth="1.4" strokeLinecap="round">
+      <g style={{ stroke: "var(--muted)" }} strokeWidth="1.4" strokeLinecap="round">
         <path d="M7 9h6M7 23h6M19 9h6M19 23h6" />
       </g>
     </svg>
+  );
+}
+
+/** Dark is the default. The inline script in index.html applies a stored choice before first paint. */
+function ThemeToggle() {
+  const [light, setLight] = useState(false);
+  useEffect(() => setLight(document.documentElement.dataset.theme === "light"), []);
+  const toggle = () => {
+    const next = !light;
+    setLight(next);
+    const root = document.documentElement;
+    if (next) root.dataset.theme = "light";
+    else delete root.dataset.theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", next ? "#f3f5f7" : "#0a0f15");
+    try {
+      localStorage.setItem("theme", next ? "light" : "dark");
+    } catch {
+      /* private mode: the choice lasts for this page only */
+    }
+  };
+  const label = light ? "Switch to dark mode" : "Switch to light mode";
+  return (
+    <button type="button" className="theme-toggle" onClick={toggle} aria-label={label} title={label}>
+      {light ? <Moon /> : <Sun />}
+    </button>
   );
 }
 
@@ -58,15 +83,18 @@ function Header() {
             <small>Full-stack · Systems · Automation</small>
           </span>
         </Link>
-        <button
-          className="menu-toggle"
-          aria-expanded={open}
-          aria-controls="site-nav"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span />
-        </button>
+        <div className="bar-end">
+          <ThemeToggle />
+          <button
+            className="menu-toggle"
+            aria-expanded={open}
+            aria-controls="site-nav"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <span />
+          </button>
+        </div>
         <nav id="site-nav" className="nav" data-open={open} aria-label="Primary">
           {nav.map((n) => (
             <Link

@@ -10,9 +10,24 @@ export const education = {
   coursework: ["Data structures & algorithms", "Operating systems", "Computer architecture", "Networking", "Databases", "Distributed programming"],
 };
 
+// Each certificate links to the issuer's own verification page.
 export const certifications = [
-  { name: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services", date: "Aug 2025", note: "Valid through Aug 2028" },
-  { name: "Google Data Analytics Professional Certificate", issuer: "Google", date: "May 2025" },
+  {
+    id: "aws",
+    name: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services",
+    date: "Aug 2025",
+    note: "Valid through Aug 2028",
+    verify: { href: "https://aws.amazon.com/verification", label: "Verify at aws.amazon.com", code: "23b4aa13bc324308a741066825f17b2c" },
+  },
+  {
+    id: "google",
+    name: "Google Data Analytics Professional Certificate",
+    issuer: "Google · Coursera",
+    date: "May 2025",
+    note: "8 courses: SQL, R, Tableau, spreadsheets",
+    verify: { href: "https://coursera.org/verify/professional-cert/277A2E71FQTO", label: "Verify on Coursera" },
+  },
 ];
 
 export const athletics = {
@@ -22,7 +37,7 @@ export const athletics = {
     { event: "200 Individual Medley", note: "School record" },
     { event: "100 Breaststroke", note: "School record" },
   ],
-  honors: ["Multiple Scholar-Athlete awards", "PSAC academic honors"],
+  honors: ["PSAC Swimming Athlete of the Week", "Multiple Scholar-Athlete awards", "PSAC academic honors"],
 };
 
 // The journey, told as race splits.
