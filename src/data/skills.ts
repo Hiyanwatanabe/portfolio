@@ -18,7 +18,7 @@ export const skillGroups: SkillGroup[] = [
     production: ["Python", "SQL", "JavaScript", "Bash"],
     projects: ["TypeScript", "HTML / CSS", "C#"],
     foundations: ["C", "C++", "Java", "Kotlin"],
-    evidence: ["operations-automation", "this-portfolio", "cognisense"],
+    evidence: ["tf4", "this-portfolio", "cognisense"],
   },
   {
     title: "Frontend",
@@ -32,7 +32,7 @@ export const skillGroups: SkillGroup[] = [
     production: ["Flask", "Node.js", "REST API integration", "Authentication & RBAC", "Background jobs"],
     projects: ["FastAPI", "WebSockets", "OAuth 2.0"],
     foundations: [".NET"],
-    evidence: ["operations-automation", "cognisense", "market-hunter"],
+    evidence: ["tf4", "cognisense", "market-hunter"],
   },
   {
     title: "Data",
@@ -46,21 +46,21 @@ export const skillGroups: SkillGroup[] = [
     production: ["AWS EC2", "AWS Lambda", "API Gateway", "DynamoDB", "RDS", "Nginx", "Git"],
     projects: ["Vercel", "GitHub Pages", "Docker"],
     foundations: ["S3", "IAM", "VPC", "CloudWatch", "CI/CD"],
-    evidence: ["operations-automation", "infrastructure-automation", "communication-systems"],
+    evidence: ["tf4", "infrastructure-automation", "communication-systems"],
   },
   {
     title: "Systems Administration",
     production: ["Linux", "Windows administration", "SSH & remote management", "User & access management", "Backups & recovery", "Change control", "Troubleshooting & RCA"],
     projects: ["Active Directory", "Group Policy", "Windows Server", "Proxmox / Ceph"],
     foundations: ["RMM tools", "Endpoint security"],
-    evidence: ["infrastructure-automation", "operations-automation"],
+    evidence: ["infrastructure-automation", "tf4"],
   },
   {
     title: "Telecom & Contact Center",
     production: ["Call routing & IVR", "DNIS", "Queues", "Contact-center platforms (NICE, Mitel)", "Telecom number management", "Call reporting"],
     projects: [],
     foundations: [],
-    evidence: ["communication-systems", "operations-automation"],
+    evidence: ["communication-systems", "tf4"],
   },
 ];
 

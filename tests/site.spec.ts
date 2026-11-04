@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const slugs = ["operations-automation", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
+const slugs = ["tf4", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
 
 test("home: identity, sections and no console errors", async ({ page }) => {
   const errors: string[] = [];
@@ -23,7 +23,7 @@ test("home: identity, sections and no console errors", async ({ page }) => {
 test("no horizontal overflow at common widths", async ({ page }) => {
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ["./", "./work/operations-automation", "./work/cognisense"]) {
+    for (const path of ["./", "./work/tf4", "./work/cognisense"]) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `${path} at ${width}px`).toBeLessThanOrEqual(0);
@@ -64,7 +64,7 @@ test("mobile menu opens and navigates", async ({ page, isMobile }) => {
 });
 
 test("accessibility: no serious axe violations", async ({ page }) => {
-  for (const path of ["./", "./work/operations-automation", "./work/cognisense", "./work/this-portfolio"]) {
+  for (const path of ["./", "./work/tf4", "./work/cognisense", "./work/this-portfolio"]) {
     await page.goto(path);
     await page.evaluate(() => document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-visible")));
     await page.waitForTimeout(800);
@@ -108,7 +108,7 @@ test("confidentiality: no internal names or old contact details in the page or b
       if (line.trim() && !line.startsWith("#")) banned.push(new RegExp(line.trim(), "i"));
     }
   }
-  const urls = ["./", ...["operations-automation", "communication-systems", "infrastructure-automation", "data-engineering"].map((s) => `./work/${s}`)];
+  const urls = ["./", ...["tf4", "communication-systems", "infrastructure-automation", "data-engineering"].map((s) => `./work/${s}`)];
   for (const u of urls) {
     await page.goto(u);
     const html = await page.content();
@@ -119,4 +119,16 @@ test("confidentiality: no internal names or old contact details in the page or b
     const body = await (await request.get(src)).text();
     for (const b of banned) expect(body, `${src} ${b}`).not.toMatch(b);
   }
+});
+
+test("TF4 deep dive: patterns render and the two-key switch arms only with both keys", async ({ page }) => {
+  await page.goto("./work/tf4#patterns");
+  await expect(page.locator("#patterns")).toBeVisible();
+  const status = page.locator(".dd-lamp");
+  await expect(status).toContainText("BLOCKED");
+  await page.getByRole("switch", { name: /config\.auto_reserve/ }).click();
+  await expect(status).toContainText("BLOCKED");
+  await page.getByRole("switch", { name: /execute=True/ }).click();
+  await expect(status).toContainText("ARMED");
+  await expect(page.locator(".dd-code pre")).toContainText("run_scan");
 });

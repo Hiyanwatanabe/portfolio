@@ -10,8 +10,8 @@ export function SpecVisual({ title, domains, stack }: { title: string; domains: 
   const top = 255;
   const bottom = 430;
   const items = domains.slice(0, 6);
-  const step = (W - 220) / Math.max(1, items.length - 1);
-  const pts = items.map((d, i) => ({ d, x: 110 + i * step, y: i % 2 === 0 ? top : bottom, up: i % 2 === 0 }));
+  const step = (W - 300) / Math.max(1, items.length - 1);
+  const pts = items.map((d, i) => ({ d, x: 150 + i * step, y: i % 2 === 0 ? top : bottom, up: i % 2 === 0 }));
   const path = pts
     .map((p, i) => (i === 0 ? `M 40 ${p.y} L ${p.x} ${p.y}` : `C ${pts[i - 1].x + step / 2} ${pts[i - 1].y}, ${p.x - step / 2} ${p.y}, ${p.x} ${p.y}`))
     .join(" ");
@@ -29,7 +29,7 @@ export function SpecVisual({ title, domains, stack }: { title: string; domains: 
       <line x1={W - 40} x2={W - 40} y1={lanes[0]} y2={lanes[lanes.length - 1]} stroke="rgb(148 170 195 / .25)" />
       <path d={path} fill="none" stroke="#6fd6c9" strokeOpacity={0.75} strokeWidth={2.2} />
       {pts.map((p) => {
-        const w = p.d.length * 11 + 40;
+        const w = p.d.length * 10 + 36;
         const cy = p.up ? p.y - 46 : p.y + 46;
         const left = Math.min(Math.max(p.x - w / 2, 30), W - 30 - w);
         return (
@@ -37,7 +37,7 @@ export function SpecVisual({ title, domains, stack }: { title: string; domains: 
             <line x1={p.x} x2={p.x} y1={p.y} y2={p.up ? cy + 19 : cy - 19} stroke="rgb(111 214 201 / .45)" />
             <circle cx={p.x} cy={p.y} r={7} fill="#0a0f15" stroke="#6fd6c9" strokeWidth={2.2} />
             <rect x={left} y={cy - 19} width={w} height={38} rx={19} className="box-accent" />
-            <text x={left + w / 2} y={cy + 6.5} textAnchor="middle" fontSize={19} className="title">
+            <text x={left + w / 2} y={cy + 6.5} textAnchor="middle" fontSize={17} className="title">
               {p.d}
             </text>
           </g>

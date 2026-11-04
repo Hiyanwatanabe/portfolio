@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, Info } from "../components/Icons";
 import { cognisenseShots, ProjectDiagram } from "../components/ProjectVisual";
+import { Tf4DeepDive } from "../components/Tf4DeepDive";
+import { Tf4Mock } from "../components/Tf4Mock";
 import type { ConfidentialProject, PublicProject } from "../data/projects";
 import { projects } from "../data/projects";
 import { useActiveSection, useMeta, useReveal } from "../hooks";
@@ -79,7 +81,7 @@ function PublicBody({ p }: { p: PublicProject }) {
             <ProjectDiagram project={p} />
           </div>
           <figcaption>
-            <span>System overview, simplified</span>
+            <span>{p.deepDive ? "Architecture, simplified · provider shown generically" : "System overview, simplified"}</span>
             <span className="mono">
               {p.stack.slice(0, 3).join(" · ")}
               <span className="scroll-hint"> · scroll →</span>
@@ -87,6 +89,13 @@ function PublicBody({ p }: { p: PublicProject }) {
           </figcaption>
         </figure>
       </section>
+
+      {p.deepDive === "tf4" && (
+        <section className="cs-section reveal" id="patterns" aria-labelledby="h-patterns">
+          <h2 id="h-patterns">Engineering patterns</h2>
+          <Tf4DeepDive />
+        </section>
+      )}
 
       <section className="cs-section reveal" id="approach" aria-labelledby="h-approach">
         <h2 id="h-approach">Approach</h2>
@@ -105,6 +114,14 @@ function PublicBody({ p }: { p: PublicProject }) {
             </li>
           ))}
         </ul>
+        {p.deepDive === "tf4" && (
+          <div className="gallery" style={{ marginTop: "2rem" }}>
+            <figure>
+              <Tf4Mock />
+              <figcaption>Recreated interface with synthetic runs, showing the shape of the run-history view. Not a production screenshot.</figcaption>
+            </figure>
+          </div>
+        )}
         {p.image === "cognisense" && (
           <div className="gallery" style={{ marginTop: "2rem" }}>
             {cognisenseShots.map((s) => (
@@ -147,7 +164,11 @@ export default function CaseStudy() {
   const index = projects.findIndex((p) => p.slug === slug);
   const p = projects[index];
   const ref = useReveal<HTMLDivElement>();
-  const sections = p?.confidential ? confidentialSections : publicSections;
+  const sections = p?.confidential
+    ? confidentialSections
+    : p?.deepDive
+      ? [...publicSections.slice(0, 2), { id: "patterns", label: "Engineering patterns" }, ...publicSections.slice(2)]
+      : publicSections;
   const active = useActiveSection(p ? sections.map((s) => s.id) : []);
   useMeta(
     p ? `${p.title}: ${p.kicker} · Hiyan Kubagawa` : "Not found · Hiyan Kubagawa",
@@ -173,6 +194,16 @@ export default function CaseStudy() {
           <div><dt>Period</dt><dd>{p.period}</dd></div>
           <div><dt>Stack</dt><dd>{p.stack.slice(0, 5).join(", ")}</dd></div>
         </dl>
+        {!p.confidential && p.spec && (
+          <dl className="spec-sheet" aria-label="Technical specification">
+            {p.spec.map(([k, v]) => (
+              <div key={k}>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
         {p.confidential && (
           <div className="disclosure" style={{ marginTop: "2rem" }}>
             <Info />

@@ -138,9 +138,10 @@ function WorkCard({ p }: { p: Project }) {
 
 function Work() {
   const ref = useReveal<HTMLElement>();
+  const tf4 = getProject("tf4")!;
   const professional = projects.filter((p) => p.confidential);
   const cognisense = getProject("cognisense")!;
-  const more = projects.filter((p) => !p.confidential && p.slug !== "cognisense");
+  const more = projects.filter((p) => p.context !== "Professional" && p.slug !== "cognisense");
   return (
     <section className="section" id="work" ref={ref} aria-labelledby="work-title">
       <div className="container">
@@ -148,17 +149,43 @@ function Work() {
         <div className="section-head reveal">
           <h2 id="work-title">Systems I've built, run and studied</h2>
           <p>
-            Professional work is described by role, domains and technology; the implementation stays with my
-            employer. Research and personal projects go all the way down to the code.
+            TF4 is shown in depth: architecture, patterns and code. My other professional work is described by
+            role, domains and technology. Research and personal projects go all the way down to the code.
           </p>
         </div>
 
         <div className="work-group">
           <div className="work-group-head reveal">
             <h3 className="mono">Professional · National Sales Partners</h3>
-            <span className="chip chip-gold">Confidential: described at domain level</span>
+            <span className="chip chip-gold">TF4 in depth · others at domain level</span>
           </div>
-          <div className="work-grid">
+          <article className="work reveal" aria-labelledby="w-tf4">
+            <Link to="/work/tf4" className="work-visual" tabIndex={-1} aria-hidden>
+              <span className="chip tag">Architecture</span>
+              <ProjectPreview project={tf4} />
+            </Link>
+            <div className="work-body">
+              <div className="work-meta mono">
+                <span>{tf4.context}</span>
+                <span>{tf4.period}</span>
+                <span>{tf4.role}</span>
+              </div>
+              <h3 id="w-tf4">
+                <Link to="/work/tf4">{tf4.title}</Link>
+              </h3>
+              <p className="work-kicker">{tf4.kicker}</p>
+              <p>{tf4.summary}</p>
+              <div className="chips">
+                {tf4.stack.slice(0, 8).map((s) => (
+                  <span className="chip" key={s}>{s}</span>
+                ))}
+              </div>
+              <Link className="link-arrow" to="/work/tf4">
+                Architecture, patterns &amp; code <ArrowRight />
+              </Link>
+            </div>
+          </article>
+          <div className="work-grid work-grid-3">
             {professional.map((p) => (
               <WorkCard key={p.slug} p={p} />
             ))}

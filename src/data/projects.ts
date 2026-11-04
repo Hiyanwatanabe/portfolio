@@ -1,11 +1,11 @@
 // Projects and case studies.
 //
-// Professional work is "confidential": it is described by role, engineering domains, technologies
-// and general engineering principles only. It never names internal systems, counts, hardware,
-// schedules, architecture, routing, vendors, data or business strategy, and it has no diagrams.
+// Most professional work is "confidential": described by role, engineering domains, technologies and
+// general principles only, with no diagrams. TF4 is the exception Hiyan chose to publish in depth; it
+// still leaves out counts, provider names, number data, target strategy and screenshots.
 // Research and independent projects are public and carry full technical depth.
 
-export type VisualKey = "spec" | "cognisense" | "market" | "portfolio";
+export type VisualKey = "spec" | "tf4" | "cognisense" | "market" | "portfolio";
 export type Layer = "frontend" | "api" | "backend" | "data" | "infra";
 
 type Base = {
@@ -33,6 +33,8 @@ export type ConfidentialProject = Base & {
 export type PublicProject = Base & {
   confidential: false;
   image?: "cognisense";
+  deepDive?: "tf4"; // extra engineering-patterns section on the case-study page
+  spec?: [string, string][]; // spec sheet shown under the case-study header
   problem: string;
   approach: string[];
   features: string[];
@@ -46,31 +48,69 @@ const employer = "National Sales Partners";
 
 export const projects: Project[] = [
   {
-    slug: "operations-automation",
-    confidential: true,
-    title: "Operations Automation Platform",
-    kicker: "Internal full-stack application for telecom workflow automation",
+    slug: "tf4",
+    confidential: false,
+    deepDive: "tf4",
+    title: "TF4",
+    kicker: "Toll-free inventory automation platform",
     summary:
-      "Designed and developed internal software that supports operational automation, API integration, data processing and workflow management, from the database and backend services to the interface the team works in.",
+      "An authenticated full-stack platform that scans, classifies, reserves and reconciles high-volume toll-free number inventory through a provider REST API, with resumable background jobs, run history, role-based access and production safeguards.",
     context: "Professional",
     org: employer,
     period: "2025 — Present",
-    role: "Designed, built and maintain it",
-    stack: ["Python", "Flask", "SQL", "REST APIs", "JavaScript", "HTML / CSS", "AWS", "Linux"],
+    role: "Designed, built and operate it",
+    stack: ["Python", "Flask", "SQLAlchemy", "SQLite", "Gunicorn", "Nginx", "AWS EC2", "REST APIs", "Jinja / JavaScript", "pytest"],
     layers: ["frontend", "api", "backend", "data", "infra"],
-    visual: "spec",
-    domains: ["Full-stack development", "API integration", "Data processing", "Workflow automation", "Access control", "Cloud deployment"],
-    responsibilities: [
-      "Designed the application end to end: data model, backend services, web interface and access control.",
-      "Integrated an external provider's REST API into day-to-day workflows, with error handling built in from the start.",
-      "Built background processing for long-running work, with a reviewable history of what each job did.",
-      "Added accounts, role-based permissions and an activity log.",
-      "Deploy and operate it on cloud Linux infrastructure, with backups and documented release and rollback steps.",
+    visual: "tf4",
+    spec: [
+      ["Runtime", "Python · Flask (blueprints)"],
+      ["Data", "SQLAlchemy ORM · SQLite"],
+      ["Serving", "Gunicorn behind Nginx (TLS)"],
+      ["Host", "AWS EC2 · Linux"],
+      ["Jobs", "In-process workers · cursors · backoff"],
+      ["Integration", "Provider REST API · session + polling"],
+      ["Access", "Accounts · grouped permissions · audit log"],
+      ["Quality", "pytest · hash-verified releases"],
     ],
-    principles: [
-      { title: "Safe by default", body: "Anything that changes an external system stays off until someone deliberately turns it on." },
-      { title: "Every job leaves a record", body: "Automation people can't inspect is automation people stop trusting. Runs, results and errors are visible." },
-      { title: "Small, reversible releases", body: "Changes ship in small pieces, with a backup and a known way back." },
+    problem:
+      "Toll-free numbers are a working asset for a call-driven business: which numbers you hold, which ones are about to become available, and which ones match the patterns your campaigns need. Doing that by hand means spreadsheets, repeated lookups in a provider portal and decisions made on stale data.",
+    approach: [
+      "TF4 moves the work into one Flask application. Configurable generators produce candidate numbers from target patterns; a scan service checks them against the provider's REST API, classifies the results and writes them to a live table with full status history.",
+      "Long-running work runs as managed background jobs inside the app, each with its own run record, cursor, backoff and cooldown, so an operator can see what ran, what it found and why it stopped. The provider client handles sessions, retries and polling, and logs requests with sensitive fields stripped.",
+      "Anything that changes real inventory sits behind two switches: reservation is off by default in the database configuration, and the code path that can reserve requires an explicit caller flag as well. Accounts, grouped permissions and an activity log record who did what.",
+    ],
+    features: [
+      "Target-driven candidate generation and deterministic matching",
+      "Status and history checks against the provider API",
+      "Classification and opportunity review queues",
+      "Reconciliation of owned inventory against provider records",
+      "Run history for every scan, crawl and batch job",
+      "Accounts, grouped permissions and activity logs",
+      "CSV exports and operational dashboards",
+      "Financial and lifecycle views (in development)",
+    ],
+    challenges: [
+      {
+        title: "Safe by default",
+        body: "A wrong reservation costs money and is hard to undo. Reserve-capable code needs both a stored setting and an intentional flag from the caller; the dashboard's scan route always runs with execution disabled.",
+      },
+      {
+        title: "Rate limits and partial failure",
+        body: "Provider calls are retried with backoff, polled where the API is asynchronous, and resumed from a saved cursor so a failed batch picks up where it stopped instead of duplicating work.",
+      },
+      {
+        title: "Deploying without surprises",
+        body: "The server is updated with selected files, never a whole-tree copy. Each release is checked against hashes of the live files, backed up first and recorded with undo steps.",
+      },
+      {
+        title: "Concurrency inside one process",
+        body: "Background jobs share process-level locks and run state, so the app runs as a single Gunicorn worker by design until that state moves to a durable queue.",
+      },
+    ],
+    outcomes: [
+      "In daily production use on AWS EC2 behind Nginx",
+      "Full stack owned end to end: schema, services, interface, deployment and operations",
+      "Automated test suite with pytest",
     ],
   },
   {
