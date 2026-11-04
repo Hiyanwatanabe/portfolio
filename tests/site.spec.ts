@@ -1,0 +1,122 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const slugs = ["operations-automation", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
+
+test("home: identity, sections and no console errors", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("./");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Hiyan");
+  for (const id of ["stack", "work", "experience", "skills", "about", "education", "contact"]) {
+    await expect(page.locator(`#${id}`)).toHaveCount(1);
+  }
+  await expect(page.locator("#contact").getByRole("link", { name: /hiyanwk@gmail.com/ })).toHaveAttribute("href", "mailto:hiyanwk@gmail.com");
+  await expect(page.locator("#contact").getByRole("link", { name: /814/ })).toHaveAttribute("href", "tel:+18142186777");
+  expect(errors).toEqual([]);
+});
+
+test("no horizontal overflow at common widths", async ({ page }) => {
+  for (const width of [320, 375, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of ["./", "./work/operations-automation", "./work/cognisense"]) {
+      await page.goto(path);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, `${path} at ${width}px`).toBeLessThanOrEqual(0);
+    }
+  }
+});
+
+for (const slug of slugs) {
+  test(`case study renders: ${slug}`, async ({ page }) => {
+    await page.goto(`./work/${slug}`);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator("#problem, #role").first()).toBeVisible();
+  });
+}
+
+test("unknown route shows not-found page", async ({ page }) => {
+  await page.goto("./nope");
+  await expect(page.getByRole("heading", { name: /doesn't exist/ })).toBeVisible();
+});
+
+test("internal links resolve and assets load", async ({ page, request }) => {
+  await page.goto("./");
+  const hrefs = await page.$$eval("a[href]", (as) => as.map((a) => (a as HTMLAnchorElement).href));
+  // GitHub Pages redirects /portfolio to /portfolio/; the local preview server does not.
+  const internal = [...new Set(hrefs.filter((h) => h.startsWith("http://localhost") && !h.includes("#")).map((h) => (h.endsWith("/portfolio") ? `${h}/` : h)))];
+  for (const h of internal) {
+    const res = await request.get(h);
+    expect(res.status(), h).toBeLessThan(400);
+  }
+});
+
+test("mobile menu opens and navigates", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "mobile only");
+  await page.goto("./");
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Experience" }).click();
+  await expect(page).toHaveURL(/#experience$/);
+});
+
+test("accessibility: no serious axe violations", async ({ page }) => {
+  for (const path of ["./", "./work/operations-automation", "./work/cognisense", "./work/this-portfolio"]) {
+    await page.goto(path);
+    await page.evaluate(() => document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-visible")));
+    await page.waitForTimeout(800);
+    const results = await new AxeBuilder({ page }).analyze();
+    const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(serious.map((v) => `${v.id}: ${v.nodes.length}`), path).toEqual([]);
+  }
+});
+
+test("stack explorer: click and arrow keys change the panel", async ({ page }) => {
+  await page.goto("./#stack");
+  const tabs = page.getByRole("tab");
+  await expect(tabs).toHaveCount(5);
+  await tabs.nth(3).click();
+  await expect(tabs.nth(3)).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel")).toContainText("SQL");
+  await page.keyboard.press("ArrowRight");
+  await expect(tabs.nth(4)).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(4)).toBeFocused();
+  await page.keyboard.press("Home");
+  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+});
+
+test("diploma opens and closes in a dialog", async ({ page }) => {
+  await page.goto("./#education");
+  await page.getByRole("button", { name: /View credential/ }).click();
+  const dialog = page.getByRole("dialog", { name: "Diploma" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
+test("confidentiality: no internal names or old contact details in the page or bundle", async ({ page, request }) => {
+  // Outdated contact details are checked here. Employer-specific terms live in tests/private-terms.txt,
+  // one regular expression per line. That file is gitignored on purpose: listing the terms in a public
+  // repository would disclose them.
+  const banned = [/hiyanwatanabe2002/i, /watanabe001/i, /linkedin\.com\/in\/hiyan-kubagawa"/];
+  const privateTerms = join(dirname(fileURLToPath(import.meta.url)), "private-terms.txt");
+  if (existsSync(privateTerms)) {
+    for (const line of readFileSync(privateTerms, "utf8").split(/\r?\n/)) {
+      if (line.trim() && !line.startsWith("#")) banned.push(new RegExp(line.trim(), "i"));
+    }
+  }
+  const urls = ["./", ...["operations-automation", "communication-systems", "infrastructure-automation", "data-engineering"].map((s) => `./work/${s}`)];
+  for (const u of urls) {
+    await page.goto(u);
+    const html = await page.content();
+    for (const b of banned) expect(html, `${u} ${b}`).not.toMatch(b);
+  }
+  const scripts = await page.$$eval("script[src]", (s) => s.map((x) => (x as HTMLScriptElement).src));
+  for (const src of scripts) {
+    const body = await (await request.get(src)).text();
+    for (const b of banned) expect(body, `${src} ${b}`).not.toMatch(b);
+  }
+});

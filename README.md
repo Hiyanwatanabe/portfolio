@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# Hiyan Kubagawa: portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal engineering portfolio: React 19 + TypeScript + Vite, static, deployed to GitHub Pages at
+<https://hiyanwatanabe.github.io/portfolio/>.
 
-## Available Scripts
+## Run it
 
-In the project directory, you can run:
+```bash
+npm install
+npm run dev          # http://localhost:5173/portfolio/
+```
 
-### `npm start`
+```bash
+npm run build        # type-check, build to dist/, write 404.html + sitemap.xml
+npm run preview      # serve dist/ at http://localhost:4173/portfolio/
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npx playwright install chromium   # once
+npm run check        # lint + build + Playwright tests (desktop and mobile)
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Where things live
 
-### `npm test`
+| Path | What |
+|---|---|
+| `src/data/profile.ts` | Name, links, hero copy, about text, contact copy |
+| `src/data/experience.ts` | Roles, capabilities, highlights (formal titles stay as on the resume) |
+| `src/data/projects.ts` | Every project: confidential (role, domains, principles) or public (full case study) |
+| `src/data/skills.ts` | Skill tiers with evidence links, and the five layers of the stack explorer |
+| `src/data/education.ts` | Degree, certifications, athletics, the "Splits" timeline |
+| `src/pages/` | Home, case-study template, 404 |
+| `src/components/` | Header/footer, hero lanes, stack explorer, project previews |
+| `src/visuals/` | SVG diagrams for public projects; `SpecVisual` domain map for confidential work |
+| `src/styles/global.css` | The whole design system: tokens at the top, then components |
+| `scripts/optimize_images.py` | Crops and converts photos (and the privacy-cropped diploma) to WebP; builds `public/og.png` |
+| `resume/resume.html`, `scripts/build_resume.mjs` | Resume source and PDF build (`node scripts/build_resume.mjs`) |
+| `tests/site.spec.ts` | Smoke, routing, overflow, links, mobile menu, explorer keyboard, diploma dialog, axe, confidentiality |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Text changes never need a component edit: change the data file and the page follows.
 
-### `npm run build`
+### Add a project
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Add an object to `projects` in `src/data/projects.ts` (copy an existing one). `slug` becomes `/work/<slug>`.
+2. Professional work: `confidential: true`, `visual: "spec"` (the domain map is drawn from `domains`).
+   Public work: pick a `visual`; to draw a new diagram, add a component in `src/visuals/`, register it in
+   `src/visuals/index.tsx` and add its key to `VisualKey`.
+3. Confidential projects appear in the "Professional" grid on the homepage; public ones under "Research &
+   independent". `layers` controls where it shows up in the stack explorer. The sitemap picks up new slugs
+   automatically.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Replace a photo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Put the original in a folder outside the repo (default `../_orig_assets`), keep the file names used in
+`JOBS` in `scripts/optimize_images.py` (or edit them), then:
 
-### `npm run eject`
+```bash
+python scripts/optimize_images.py ../_orig_assets
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Faces are only cropped and resized, never retouched.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Replace the resume
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Overwrite `public/Hiyan_Kubagawa_Resume.pdf` (or change `resume` in `src/data/profile.ts`).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Deploy (only when you decide to)
 
-## Learn More
+The live site is the `gh-pages` branch. `npm run deploy` builds and pushes `dist/` to it with `gh-pages`.
+Merge the `redesign` branch into `main` first if you want the source there too. `base` in `vite.config.ts`
+must match the repository name (`/portfolio/`).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Deep links like `/portfolio/work/cognisense` work because the build copies `index.html` to `404.html`, which GitHub
+Pages serves for unknown paths.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Content rules
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Professional work is **confidential**: set `confidential: true` and describe role, engineering domains,
+  technologies and general principles only. No internal system names, hardware, quantities, schedules,
+  architecture, routing, vendors, data, metrics or business strategy, and no diagrams or screenshots.
+  The test suite fails if known internal terms appear in the pages or the JavaScript bundle. Those terms
+  live in `tests/private-terms.txt` (one regex per line), which is **gitignored on purpose**: listing them in a
+  public repo would disclose them. A fresh clone won't have it; recreate it locally.
+- Research and personal projects can go into full technical depth.
+- No skill percentages and no invented metrics.
+- Remember the repository is public: comments, commit messages and history are published too.

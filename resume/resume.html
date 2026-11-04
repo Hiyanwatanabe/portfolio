@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Hiyan Kubagawa – Resume</title>
+<meta name="author" content="Hiyan Kubagawa" />
+<style>
+  @page { size: Letter; margin: 0.42in 0.55in; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 9.1pt; line-height: 1.3; color: #14181d; }
+  h1 { font-size: 21pt; letter-spacing: -0.2pt; font-weight: 700; }
+  .title { font-size: 11pt; color: #0d6e64; font-weight: 700; margin-top: 1pt; }
+  .contact { margin-top: 4pt; font-size: 9pt; color: #333; }
+  .contact a { color: inherit; text-decoration: none; }
+  h2 { font-size: 9.6pt; text-transform: uppercase; letter-spacing: 1.2pt; color: #0d6e64; border-bottom: 1px solid #b9c4cc; padding-bottom: 2pt; margin: 8pt 0 4pt; }
+  .row { display: flex; justify-content: space-between; gap: 12pt; }
+  .role { font-weight: 700; }
+  .org { font-weight: 700; }
+  .meta { color: #444; white-space: nowrap; }
+  ul { margin: 1pt 0 4pt 13pt; }
+  li { margin-bottom: 1pt; }
+  .skills div { margin-bottom: 1.6pt; }
+  .skills b { display: inline-block; min-width: 108pt; }
+  p { margin-bottom: 2pt; }
+</style>
+</head>
+<body>
+  <h1>Hiyan Kubagawa</h1>
+  <div class="title">Full-Stack Software Engineer &amp; Systems Administrator</div>
+  <div class="contact">
+    Cleveland, OH &nbsp;|&nbsp; +1 (814) 218-6777 &nbsp;|&nbsp; <a href="mailto:hiyanwk@gmail.com">hiyanwk@gmail.com</a> &nbsp;|&nbsp;
+    <a href="https://www.linkedin.com/in/hiyan-kubagawa-/">linkedin.com/in/hiyan-kubagawa-</a> &nbsp;|&nbsp;
+    <a href="https://github.com/Hiyanwatanabe">github.com/Hiyanwatanabe</a> &nbsp;|&nbsp;
+    <a href="https://hiyanwatanabe.github.io/portfolio/">hiyanwatanabe.github.io/portfolio</a>
+  </div>
+
+  <h2>Summary</h2>
+  <p>
+    Full-stack software engineer and systems administrator with a B.S. in Computer Science (Cum Laude). I build
+    internal web applications, integrations and automation, and administer the Linux, Windows and AWS systems they
+    run on, in a live production business environment. Trilingual (English, Portuguese, Spanish); former NCAA
+    Division II swimmer.
+  </p>
+
+  <h2>Technical Skills</h2>
+  <div class="skills">
+    <div><b>Languages</b>Python, SQL, JavaScript, TypeScript, Bash, HTML/CSS, C#, C/C++, Java</div>
+    <div><b>Frontend</b>React, Next.js, responsive and accessible UI, dashboards, Chart.js</div>
+    <div><b>Backend &amp; APIs</b>Flask, FastAPI, Node.js, REST APIs, WebSockets, OAuth 2.0, authentication and role-based access, background jobs</div>
+    <div><b>Data</b>MySQL, SQLite, SQLAlchemy, DynamoDB, ETL, validation and reconciliation, pandas, NumPy</div>
+    <div><b>Cloud &amp; Systems</b>AWS (EC2, Lambda, API Gateway, DynamoDB, RDS), Linux and Windows administration, Nginx, SSH, Git/GitHub, Docker, Active Directory, backups, change control</div>
+    <div><b>Telecom</b>Call routing and IVR, contact-center platforms (NICE, Mitel), DNIS, call reporting</div>
+  </div>
+
+  <h2>Experience</h2>
+  <div class="row"><span><span class="role">IT Administrator (Software &amp; Automation)</span> · <span class="org">National Sales Partners</span></span><span class="meta">Cleveland, OH · Oct 2025 – Present</span></div>
+  <ul>
+    <li>Administer production systems across Linux, Windows and AWS: user access and permissions, backups, change control, monitoring, and root-cause troubleshooting of applications, databases, APIs and networks.</li>
+    <li>Design, build and maintain an internal full-stack operations platform (Python, Flask, SQL, JavaScript) on AWS with authentication, role-based access, background jobs, activity logging and a third-party REST API integration.</li>
+    <li>Develop Python and Bash automation across distributed Linux infrastructure, with monitoring and verification so failures surface quickly and changes stay reversible.</li>
+    <li>Engineer on the contact-center migration from Mitel to NICE: routing and IVR configuration, end-to-end validation, integrations, internal Next.js tools and rebuilt operational reporting.</li>
+    <li>Build Python and SQL workflows that migrate and reconcile records between business platforms across multi-million-row datasets, preserving identifiers and preventing duplicates.</li>
+    <li>Work with operations and finance stakeholders to turn requirements into production features, test plans and documentation.</li>
+  </ul>
+
+  <div class="row"><span><span class="role">Technical Project Lead / Cognitive Load Research Intern</span> · <span class="org">Lockheed Martin</span></span><span class="meta">Remote · Sep 2024 – May 2025</span></div>
+  <ul>
+    <li>Led the technical build of CogniSense, a Lockheed Martin–sponsored senior-design system measuring cognitive load from EEG, facial expression and NASA-TLX surveys.</li>
+    <li>Built a Python/FastAPI service that reads an 8-channel, 500 Hz EEG stream over Lab Streaming Layer, computes beta/alpha band power (Welch's method) and streams it over WebSockets to a Next.js dashboard.</li>
+    <li>Debugged hardware/software timing through logs and repeatable test sessions; wrote documentation and test procedures and supported live trials with frontend and hardware teammates.</li>
+  </ul>
+
+  <div class="row"><span><span class="role">Technical Support Intern</span> · <span class="org">Ankara Informatica</span></span><span class="meta">São Paulo, Brazil · Jun – Aug 2023</span></div>
+  <ul>
+    <li>Supported desktops, mobile devices and printers across Windows and Linux; imaged systems, installed software, maintained workstations, documented issues and trained users.</li>
+  </ul>
+
+  <h2>Projects</h2>
+  <ul>
+    <li><b>Portfolio site</b> (React 19, TypeScript, Vite): typed content model, CSS design system, accessible interactive components, SVG diagrams, Playwright and axe test suite.</li>
+    <li><b>Market Hunter</b> (Python): paper-trading research engine with an incremental Parquet data pipeline, cost-aware strategy evaluation and code-level guards against live trading.</li>
+  </ul>
+
+  <h2>Education &amp; Certifications</h2>
+  <div class="row"><span><b>Gannon University</b>, Erie, PA · B.S. Computer Science, <i>Cum Laude</i> · GPA 3.52 · Dean's List</span><span class="meta">May 2025</span></div>
+  <p>NCAA Division II Swimming: two school records (200 IM, 100 breaststroke); multiple Scholar-Athlete awards.</p>
+  <p><b>AWS Certified Cloud Practitioner</b> (Aug 2025 – Aug 2028) · <b>Google Data Analytics Professional Certificate</b> (May 2025)</p>
+  <p><b>Languages:</b> English (fluent), Portuguese (native), Spanish (full professional)</p>
+</body>
+</html>
