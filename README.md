@@ -84,3 +84,17 @@ Pages serves for unknown paths.
 - Research and personal projects can go into full technical depth.
 - No skill percentages and no invented metrics.
 - Remember the repository is public: comments, commit messages and history are published too.
+
+## Custom domain
+
+`site.config.json` holds the public address (`siteUrl`). Everything else follows from it at build time:
+Vite's base path, canonical/Open Graph/JSON-LD URLs, `sitemap.xml`, `robots.txt`, and a `CNAME` file when
+the host isn't `*.github.io`.
+
+To move to `https://hiyaner.is-a.dev/` after the is-a.dev registration is merged:
+
+1. Set `"siteUrl": "https://hiyaner.is-a.dev/"` in `site.config.json`.
+2. `npm run check`, then `npm run deploy`.
+3. Repo **Settings → Pages → Custom domain**: `hiyaner.is-a.dev`, then **Enforce HTTPS** once available.
+
+The old `hiyanwatanabe.github.io/portfolio/` URL then redirects to the custom domain.

@@ -176,7 +176,7 @@ export default function CaseStudy() {
   useMeta(
     p ? `${p.title}: ${p.kicker} · Hiyan Kubagawa` : "Not found · Hiyan Kubagawa",
     p ? p.summary : "This page does not exist.",
-    p ? `work/${p.slug}` : "",
+    p ? `work/${p.slug}/` : "",
   );
   if (!p) return <NotFound />;
 
