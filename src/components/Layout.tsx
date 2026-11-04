@@ -120,7 +120,6 @@ export function Layout() {
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
           </span>
-          <span className="mono">Built with React, TypeScript &amp; Vite</span>
         </div>
       </footer>
     </>

@@ -15,7 +15,7 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/hiyan-kubagawa-/",
   // Put the PDF in /public under this name. See README → "Replace the resume".
   resume: "Hiyan_Kubagawa_Resume.pdf",
-  siteUrl: "https://hiyanwatanabe.github.io/portfolio/",
+  siteUrl: __SITE_URL__, // from site.config.json
 
   headline: "I build the software and systems behind real-world operations.",
   lede:

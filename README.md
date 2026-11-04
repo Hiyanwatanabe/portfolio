@@ -1,7 +1,7 @@
 # Hiyan Kubagawa: portfolio
 
-Personal engineering portfolio: React 19 + TypeScript + Vite, static, deployed to GitHub Pages at
-<https://hiyanwatanabe.github.io/portfolio/>.
+Personal engineering portfolio: React 19 + TypeScript + Vite, static, deployed to GitHub Pages.
+The public address lives in `site.config.json` (`siteUrl`); see "Custom domain" below.
 
 ## Run it
 

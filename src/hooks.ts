@@ -45,7 +45,7 @@ export function useMeta(title: string, description: string, path = "") {
   useEffect(() => {
     document.title = title;
     const set = (sel: string, attr: string, value: string) => document.querySelector(sel)?.setAttribute(attr, value);
-    const url = `https://hiyanwatanabe.github.io/portfolio/${path}`;
+    const url = `${__SITE_URL__}${path}`;
     set('meta[name="description"]', "content", description);
     set('meta[property="og:title"]', "content", title);
     set('meta[property="og:description"]', "content", description);

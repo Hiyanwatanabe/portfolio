@@ -1,13 +1,16 @@
+import { readFileSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
+
+const base = new URL((JSON.parse(readFileSync("site.config.json", "utf8")) as { siteUrl: string }).siteUrl).pathname;
 
 export default defineConfig({
   testDir: "tests",
   fullyParallel: true,
   reporter: "list",
-  use: { baseURL: "http://localhost:4173/portfolio/" },
+  use: { baseURL: `http://localhost:4173${base}` },
   webServer: {
     command: "npx vite preview --port 4173 --strictPort",
-    url: "http://localhost:4173/portfolio/",
+    url: `http://localhost:4173${base}`,
     reuseExistingServer: true,
   },
   projects: [
