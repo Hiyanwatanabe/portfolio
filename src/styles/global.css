@@ -941,3 +941,8 @@ p { text-wrap: pretty; }
 .scr-pdf-foot { position: absolute; left: 24px; right: 24px; bottom: 16px; font-size: 8px; color: #6b7682; border-top: 1px solid #edf0f3; padding-top: 6px; }
 @media (prefers-reduced-motion: reduce) { .ai-lane li::after { animation: none; transform: scaleX(1); opacity: 0.6; } }
 .work-group-head .chip { white-space: normal; text-align: left; }
+
+/* Very small screens: long case-study titles and wide pattern blocks must not cause sideways scroll */
+.cs-hero h1 { overflow-wrap: break-word; hyphens: auto; }
+@media (max-width: 420px) { .cs-hero h1 { font-size: clamp(2rem, 10.5vw, 2.8rem); } }
+.dd, .dd-block, .dd-figure, .dd-code, .ai-play, .ai-map, .ai-saga, .dd-switch { min-width: 0; }

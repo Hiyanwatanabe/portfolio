@@ -23,7 +23,7 @@ test("home: identity, sections and no console errors", async ({ page }) => {
 test("no horizontal overflow at common widths", async ({ page }) => {
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ["./", "./work/tf4", "./work/cognisense"]) {
+    for (const path of ["./", ...slugs.map((s) => `./work/${s}/`)]) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `${path} at ${width}px`).toBeLessThanOrEqual(0);
