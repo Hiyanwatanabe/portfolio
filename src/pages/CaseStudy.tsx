@@ -63,7 +63,7 @@ function ConfidentialBody({ p }: { p: ConfidentialProject }) {
         <h2 id="h-pr">How I approach this kind of work</h2>
         <div className="challenge-grid">
           {p.principles.map((c) => (
-            <div className="challenge" key={c.title}>
+            <div className="challenge spot" key={c.title}>
               <h3>{c.title}</h3>
               <p>{c.body}</p>
             </div>
@@ -156,7 +156,7 @@ function PublicBody({ p }: { p: PublicProject }) {
         <h2 id="h-ch">The hard parts</h2>
         <div className="challenge-grid">
           {p.challenges.map((c) => (
-            <div className="challenge" key={c.title}>
+            <div className="challenge spot" key={c.title}>
               <h3>{c.title}</h3>
               <p>{c.body}</p>
             </div>
@@ -209,7 +209,7 @@ export default function CaseStudy() {
           <div><dt>Stack</dt><dd>{p.stack.slice(0, 5).join(", ")}</dd></div>
         </dl>
         {p.brief && (
-          <section className="brief" aria-labelledby="h-brief">
+          <section className="brief spot" aria-labelledby="h-brief">
             <h2 id="h-brief" className="brief-title mono">
               <span className="brief-led" aria-hidden /> At a glance
             </h2>

@@ -3,6 +3,9 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { profile } from "../data/profile";
 import { useActiveSection } from "../hooks";
 import { Download, Moon, Sun } from "./Icons";
+import { CommandPalette, PaletteButton } from "./CommandPalette";
+import { useSiteEffects } from "../effects";
+import { getTheme, toggleTheme } from "../theme";
 
 const nav = [
   { id: "work", label: "Work" },
@@ -31,20 +34,13 @@ export function BrandMark() {
 /** Dark is the default. The inline script in index.html applies a stored choice before first paint. */
 function ThemeToggle() {
   const [light, setLight] = useState(false);
-  useEffect(() => setLight(document.documentElement.dataset.theme === "light"), []);
-  const toggle = () => {
-    const next = !light;
-    setLight(next);
-    const root = document.documentElement;
-    if (next) root.dataset.theme = "light";
-    else delete root.dataset.theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", next ? "#f3f5f7" : "#0a0f15");
-    try {
-      localStorage.setItem("theme", next ? "light" : "dark");
-    } catch {
-      /* private mode: the choice lasts for this page only */
-    }
-  };
+  useEffect(() => {
+    const sync = () => setLight(getTheme() === "light");
+    sync();
+    window.addEventListener("themechange", sync);
+    return () => window.removeEventListener("themechange", sync);
+  }, []);
+  const toggle = toggleTheme;
   const label = light ? "Switch to dark mode" : "Switch to light mode";
   return (
     <button type="button" className="theme-toggle" onClick={toggle} aria-label={label} title={label}>
@@ -85,6 +81,7 @@ function Header() {
           </span>
         </Link>
         <div className="bar-end">
+          <PaletteButton />
           <ThemeToggle />
           <button
             className="menu-toggle"
@@ -131,10 +128,38 @@ function ScrollManager() {
   return null;
 }
 
+/** IDE-style status bar: build hash and date from the build, local time in Cleveland once mounted. */
+function StatusBar() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const fmt = () =>
+      setTime(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date()));
+    fmt();
+    const t = setInterval(fmt, 30_000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="statusbar mono">
+      <div className="container">
+        <span className="sb-item sb-ok"><i className="sb-led" aria-hidden /> all systems operational</span>
+        <span className="sb-item">build {__BUILD__.hash}</span>
+        <span className="sb-item sb-wide">deployed {__BUILD__.date}</span>
+        <span className="sb-item sb-wide">pre-rendered · React 19 · Cloudflare edge</span>
+        <span className="sb-item sb-end">
+          <span className="sb-wide">Cleveland {time || "--:--"} ET ·</span> press <kbd>/</kbd> for commands
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function Layout() {
+  useSiteEffects();
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
+      <div className="scroll-progress" aria-hidden />
+      <CommandPalette />
       <ScrollManager />
       <Header />
       <main id="main" tabIndex={-1}>
@@ -151,6 +176,7 @@ export function Layout() {
           </span>
         </div>
       </footer>
+      <StatusBar />
     </>
   );
 }

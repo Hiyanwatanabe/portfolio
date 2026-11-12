@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { HeroLanes, PaceRail } from "../components/HeroLanes";
+import { HeroTerminal } from "../components/HeroTerminal";
 import { ArrowRight, ArrowUpRight, Copy, Download, Expand, GitHub, LinkedIn, Mail, Phone, Verified } from "../components/Icons";
 import { LaneLabel } from "../components/LaneLabel";
 import { ProjectPreview } from "../components/ProjectVisual";
@@ -29,7 +30,8 @@ const resumeHref = `${import.meta.env.BASE_URL}${profile.resume}`;
 
 function Hero() {
   return (
-    <section className="hero" aria-labelledby="hero-title">
+    <section className="hero spot" aria-labelledby="hero-title">
+      <div className="hero-grid-bg" aria-hidden />
       <HeroLanes />
       <div className="container">
         <div className="hero-grid">
@@ -76,11 +78,21 @@ function Hero() {
                 alt="Portrait of Hiyan Kubagawa in a navy suit"
                 fetchPriority="high"
               />
+              <span className="hud hud-tl" aria-hidden />
+              <span className="hud hud-tr" aria-hidden />
+              <span className="hud hud-bl" aria-hidden />
+              <span className="hud hud-br" aria-hidden />
+              <span className="hud-scan" aria-hidden />
+              <span className="hud-label hud-label-top mono" aria-hidden>
+                <span><i className="hud-rec" /> LIVE</span>
+                <span>41.50°N 81.69°W</span>
+              </span>
               <figcaption className="portrait-caption mono">
                 <span>Engineer · Sysadmin</span>
                 <span>Cleveland, OH</span>
               </figcaption>
             </div>
+            <HeroTerminal />
           </figure>
         </div>
         <PaceRail />
@@ -124,7 +136,7 @@ function Stack() {
 
 function WorkCard({ p }: { p: Project }) {
   return (
-    <article className="work-card reveal" aria-labelledby={`wc-${p.slug}`}>
+    <article className="work-card reveal spot" aria-labelledby={`wc-${p.slug}`}>
       <Link to={`/work/${p.slug}/`} className="work-card-visual" tabIndex={-1} aria-hidden>
         <ProjectPreview project={p} />
       </Link>
@@ -169,7 +181,7 @@ function Work() {
           </div>
           <div className="work-list">
             {featuredWork.map((p) => (
-              <article className="work reveal" aria-labelledby={`w-${p.slug}`} key={p.slug}>
+              <article className="work reveal spot" aria-labelledby={`w-${p.slug}`} key={p.slug}>
                 <Link to={`/work/${p.slug}/`} className="work-visual" tabIndex={-1} aria-hidden>
                   <span className="chip tag">Architecture</span>
                   <ProjectPreview project={p} />
@@ -209,7 +221,7 @@ function Work() {
             <h3 className="mono">Venture · product &amp; go-to-market</h3>
             <span className="chip chip-gold">Business case to code</span>
           </div>
-          <article className="work reveal" aria-labelledby={`w-${venture.slug}`}>
+          <article className="work reveal spot" aria-labelledby={`w-${venture.slug}`}>
             <Link to={`/work/${venture.slug}/`} className="work-visual" tabIndex={-1} aria-hidden>
               <span className="chip tag">Business + architecture</span>
               <ProjectPreview project={venture} />
@@ -242,7 +254,7 @@ function Work() {
             <h3 className="mono">Research &amp; independent</h3>
             <span className="chip chip-accent">Full technical depth</span>
           </div>
-          <article className="work reveal" aria-labelledby="w-cognisense">
+          <article className="work reveal spot" aria-labelledby="w-cognisense">
             <Link to="/work/cognisense/" className="work-visual" tabIndex={-1} aria-hidden>
               <span className="chip tag">Screenshots</span>
               <ProjectPreview project={cognisense} />
@@ -269,7 +281,7 @@ function Work() {
           </article>
           <div className="more-grid">
             {more.map((p) => (
-              <Link to={`/work/${p.slug}/`} className="card reveal" key={p.slug}>
+              <Link to={`/work/${p.slug}/`} className="card reveal spot" key={p.slug}>
                 <span className="mono muted">{p.context} · {p.period}</span>
                 <h3>{p.title}</h3>
                 <p className="work-kicker">{p.kicker}</p>
@@ -346,7 +358,7 @@ function Business() {
         </div>
         <ul className="biz-grid">
           {lenses.map((l, i) => (
-            <li className="biz-card reveal" key={l.label}>
+            <li className="biz-card reveal spot" key={l.label}>
               <span className="mono biz-n">{String(i + 1).padStart(2, "0")}</span>
               <h3>{l.label}</h3>
               <p>{l.body}</p>
@@ -628,7 +640,7 @@ function Credentials() {
         <LaneLabel n="07">Education, credentials &amp; athletics</LaneLabel>
         <h2 id="edu-title" className="visually-hidden">Education, credentials and athletics</h2>
         <div className="cred-grid">
-          <div className="panel panel-edu reveal">
+          <div className="panel panel-edu reveal spot">
             <div className="edu-text">
               <span className="mono">Education</span>
               <h3>{education.school}</h3>
@@ -648,7 +660,7 @@ function Credentials() {
             </div>
             <CredentialViewer c={diplomaCredential} />
           </div>
-          <div className="panel panel-cert reveal">
+          <div className="panel panel-cert reveal spot">
             <span className="mono">Certifications</span>
             <div className="cert-list">
               {certifications.map((c) => (
@@ -670,7 +682,7 @@ function Credentials() {
               ))}
             </div>
           </div>
-          <div className="panel panel-ath reveal">
+          <div className="panel panel-ath reveal spot">
             <span className="mono">{athletics.level}</span>
             <div className="athlete-photo">
               <img

@@ -264,3 +264,18 @@ test("front desk: business calculator, lead funnel and home business section res
   await page.goto("./#business");
   await expect(page.locator("#business .biz-card")).toHaveCount(6);
 });
+
+test("command palette: opens with the keyboard, filters and navigates", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard shortcut is for desktop");
+  await page.goto("./");
+  await page.keyboard.press("Control+k");
+  const dialog = page.getByRole("dialog", { name: "Command palette" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.type("auto-inv");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/work\/auto-invoice\/$/);
+  await page.keyboard.press("/");
+  await page.keyboard.type("theme");
+  await page.keyboard.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+});
