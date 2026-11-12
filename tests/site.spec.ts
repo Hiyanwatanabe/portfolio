@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const slugs = ["tf4", "auto-invoice", "communication-systems", "infrastructure-automation", "data-engineering", "cognisense", "this-portfolio", "market-hunter"];
+const slugs = ["tf4", "auto-invoice", "communication-systems", "infrastructure-automation", "data-engineering", "front-desk", "cognisense", "this-portfolio", "market-hunter"];
 
 test("home: identity, sections and no console errors", async ({ page }) => {
   const errors: string[] = [];
@@ -248,4 +248,19 @@ test("about page tells the story and answers the basics", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hiyan Kubagawa");
   await expect(page.getByText("Who is Hiyan Kubagawa?")).toBeVisible();
   await expect(page.getByRole("link", { name: /TF4 case study/ })).toHaveAttribute("href", "/work/tf4/");
+});
+
+test("front desk: business calculator, lead funnel and home business section respond", async ({ page }) => {
+  await page.goto("./work/front-desk/#patterns");
+  const atRisk = page.locator(".fd-kpis strong").nth(1);
+  const before = await atRisk.textContent();
+  await page.getByLabel("Missed calls per week").fill("20");
+  await expect(atRisk).not.toHaveText(before ?? "");
+  const fit = page.locator(".fd-funnel li").last().locator("strong");
+  const fitBefore = Number(await fit.textContent());
+  await page.getByRole("switch", { name: /skip: has shop software/ }).click();
+  expect(Number(await fit.textContent())).toBeGreaterThan(fitBefore);
+  await expect(page.locator("video")).toHaveAttribute("src", /front-desk-explainer\.mp4$/);
+  await page.goto("./#business");
+  await expect(page.locator("#business .biz-card")).toHaveCount(6);
 });

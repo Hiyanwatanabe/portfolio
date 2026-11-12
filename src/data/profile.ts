@@ -5,7 +5,7 @@ export const profile = {
   fullName: "Hiyan Otavio Watanabe Kubagawa",
   // Public brand. The formal job title stays in the experience timeline.
   roles: ["Full-Stack Software Engineer", "Systems Administrator"],
-  specialties: ["Full-Stack Development", "Cloud & Infrastructure", "Systems Automation", "Data Engineering"],
+  specialties: ["Full-Stack Development", "Cloud & Infrastructure", "Systems Automation", "Data Engineering", "Product & Go-to-Market"],
   location: "Cleveland, Ohio",
   origin: "São Paulo, Brazil",
   email: "hiyanwk@gmail.com",

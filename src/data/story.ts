@@ -54,6 +54,7 @@ export const story = {
         "I like projects that make me learn something unfamiliar. Whether I'm exploring a new framework, testing an algorithm, designing an interface or working through a hard problem, I enjoy taking an idea and turning it into something that works. Personal projects are where I experiment with ideas I might not meet in my day-to-day work.",
       ],
       links: [
+        { label: "Online Front Desk (my venture)", to: "/work/front-desk/" },
         { label: "Market Hunter", to: "/work/market-hunter/" },
         { label: "This portfolio", to: "/work/this-portfolio/" },
       ],

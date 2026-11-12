@@ -6,6 +6,7 @@ import { Download, Moon, Sun } from "./Icons";
 
 const nav = [
   { id: "work", label: "Work" },
+  { id: "business", label: "Business" },
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
   { id: "about", label: "About" },

@@ -148,7 +148,8 @@ function Work() {
   const featuredWork = ["tf4", "auto-invoice"].map((s) => getProject(s)!);
   const professional = projects.filter((p) => p.confidential);
   const cognisense = getProject("cognisense")!;
-  const more = projects.filter((p) => p.context !== "Professional" && p.slug !== "cognisense");
+  const venture = getProject("front-desk")!;
+  const more = projects.filter((p) => p.context !== "Professional" && p.context !== "Venture" && p.slug !== "cognisense");
   return (
     <section className="section" id="work" ref={ref} aria-labelledby="work-title">
       <div className="container">
@@ -205,6 +206,39 @@ function Work() {
 
         <div className="work-group">
           <div className="work-group-head reveal">
+            <h3 className="mono">Venture · product &amp; go-to-market</h3>
+            <span className="chip chip-gold">Business case to code</span>
+          </div>
+          <article className="work reveal" aria-labelledby={`w-${venture.slug}`}>
+            <Link to={`/work/${venture.slug}/`} className="work-visual" tabIndex={-1} aria-hidden>
+              <span className="chip tag">Business + architecture</span>
+              <ProjectPreview project={venture} />
+            </Link>
+            <div className="work-body">
+              <div className="work-meta mono">
+                <span>{venture.context}</span>
+                <span>{venture.period}</span>
+                <span>{venture.role}</span>
+              </div>
+              <h3 id={`w-${venture.slug}`}>
+                <Link to={`/work/${venture.slug}/`}>{venture.title}</Link>
+              </h3>
+              <p className="work-kicker">{venture.kicker}</p>
+              <p>{venture.summary}</p>
+              <div className="chips">
+                {venture.stack.slice(0, 7).map((s) => (
+                  <span className="chip" key={s}>{s}</span>
+                ))}
+              </div>
+              <Link className="link-arrow" to={`/work/${venture.slug}/`}>
+                Business case, product, video &amp; lead engine <ArrowRight />
+              </Link>
+            </div>
+          </article>
+        </div>
+
+        <div className="work-group">
+          <div className="work-group-head reveal">
             <h3 className="mono">Research &amp; independent</h3>
             <span className="chip chip-accent">Full technical depth</span>
           </div>
@@ -255,12 +289,84 @@ function Work() {
   );
 }
 
+const lenses = [
+  {
+    label: "Protect revenue first",
+    body: "In TF4 a wrong reservation costs real money, so anything that changes inventory needs two independent switches before it can run.",
+    slug: "tf4",
+  },
+  {
+    label: "Billing accuracy is cash flow",
+    body: "Auto-Invoice refuses a second invoice for the same client and period, and rolls back partial writes, because a wrong invoice costs trust and time to unwind.",
+    slug: "auto-invoice",
+  },
+  {
+    label: "Start from the customer's economics",
+    body: "The front desk began with one question: what does a missed call cost a repair shop? The product, the pitch and the video are all built around that number.",
+    slug: "front-desk",
+  },
+  {
+    label: "Spend nothing you don't have to",
+    body: "The lead engine runs on free OpenStreetMap data, my own Gmail, and a paid API capped in code below its free tier: near-zero cost per lead.",
+    slug: "front-desk",
+  },
+  {
+    label: "Numbers the business already trusts",
+    body: "During the platform migration, new reports were matched against the figures operations and finance already relied on before they replaced them.",
+    slug: "communication-systems",
+  },
+  {
+    label: "Requirements into working tools",
+    body: "I work with operations and finance to turn what they need into production features, test plans and documentation that the business can rely on.",
+    slug: "auto-invoice",
+  },
+];
+
+function Business() {
+  const ref = useReveal<HTMLElement>();
+  return (
+    <section className="section" id="business" ref={ref} aria-labelledby="biz-title">
+      <div className="container">
+        <LaneLabel n="03">Business lens</LaneLabel>
+        <div className="section-head reveal">
+          <h2 id="biz-title">
+            I build for the <span className="serif">outcome</span>, not just the ticket.
+          </h2>
+          <p>
+            Code is how I solve problems, not the goal. Before I build, I ask what it's worth, what it costs, what could go
+            wrong for the business, and how we'll know it worked.
+          </p>
+        </div>
+        <div className="biz-flow reveal" aria-hidden>
+          {["Problem", "Economics", "Product", "Distribution", "Measurement"].map((s, i) => (
+            <span key={s}>
+              <i className="mono">{String(i + 1).padStart(2, "0")}</i> {s}
+            </span>
+          ))}
+        </div>
+        <ul className="biz-grid">
+          {lenses.map((l, i) => (
+            <li className="biz-card reveal" key={l.label}>
+              <span className="mono biz-n">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{l.label}</h3>
+              <p>{l.body}</p>
+              <Link className="link-arrow" to={`/work/${l.slug}/`}>
+                {getProject(l.slug)?.title} <ArrowRight />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function Experience() {
   const ref = useReveal<HTMLElement>();
   return (
     <section className="section" id="experience" ref={ref} aria-labelledby="exp-title">
       <div className="container">
-        <LaneLabel n="03">Experience</LaneLabel>
+        <LaneLabel n="04">Experience</LaneLabel>
         <div className="section-head reveal">
           <h2 id="exp-title">How the work has grown</h2>
         </div>
@@ -325,7 +431,7 @@ function Skills() {
   return (
     <section className="section" id="skills" ref={ref} aria-labelledby="skills-title">
       <div className="container">
-        <LaneLabel n="04">Toolkit</LaneLabel>
+        <LaneLabel n="05">Toolkit</LaneLabel>
         <div className="section-head reveal">
           <h2 id="skills-title">What I reach for, and how well I know it</h2>
           <p>No percentages. Three honest tiers, and the work that shows each group.</p>
@@ -375,7 +481,7 @@ function About() {
   return (
     <section className="section" id="about" ref={ref} aria-labelledby="about-title">
       <div className="container">
-        <LaneLabel n="05">About</LaneLabel>
+        <LaneLabel n="06">About</LaneLabel>
         <div className="about-grid">
           <div className="about-text reveal">
             <h2 id="about-title">{about.title}</h2>
@@ -414,7 +520,7 @@ function About() {
         </div>
 
         <div className="splits">
-          <LaneLabel n="05b">Splits</LaneLabel>
+          <LaneLabel n="06b">Splits</LaneLabel>
           <ol className="splits-track">
             {splits.map((s) => (
               <li className="split reveal" key={s.title}>
@@ -519,7 +625,7 @@ function Credentials() {
   return (
     <section className="section" id="education" ref={ref} aria-labelledby="edu-title">
       <div className="container">
-        <LaneLabel n="06">Education, credentials &amp; athletics</LaneLabel>
+        <LaneLabel n="07">Education, credentials &amp; athletics</LaneLabel>
         <h2 id="edu-title" className="visually-hidden">Education, credentials and athletics</h2>
         <div className="cred-grid">
           <div className="panel panel-edu reveal">
@@ -622,7 +728,7 @@ function Contact() {
   return (
     <section className="section contact" id="contact" ref={ref} aria-labelledby="contact-title">
       <div className="container">
-        <LaneLabel n="07">Contact</LaneLabel>
+        <LaneLabel n="08">Contact</LaneLabel>
         <h2 id="contact-title" className="reveal">{contact.title}</h2>
         <p className="contact-body reveal">{contact.body}</p>
         <div className="contact-lines reveal">
@@ -654,6 +760,7 @@ export default function Home() {
       <Hero />
       <Work />
       <Stack />
+      <Business />
       <Experience />
       <Skills />
       <About />

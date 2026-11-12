@@ -13,6 +13,7 @@ import NotFound from "./NotFound";
 // The interactive demos load only on the pages that show them.
 const Tf4DeepDive = lazy(() => import("../components/Tf4DeepDive").then((m) => ({ default: m.Tf4DeepDive })));
 const AutoInvoiceDeepDive = lazy(() => import("../components/AutoInvoiceDeepDive").then((m) => ({ default: m.AutoInvoiceDeepDive })));
+const FrontDeskDeepDive = lazy(() => import("../components/FrontDeskDeepDive").then((m) => ({ default: m.FrontDeskDeepDive })));
 const AutoInvoiceGallery = lazy(() => import("../components/AutoInvoiceScreens").then((m) => ({ default: m.AutoInvoiceGallery })));
 const demoFallback = <div className="demo-loading mono" aria-hidden>Loading interactive demo…</div>;
 
@@ -99,8 +100,10 @@ function PublicBody({ p }: { p: PublicProject }) {
 
       {p.deepDive && (
         <section className="cs-section reveal" id="patterns" aria-labelledby="h-patterns">
-          <h2 id="h-patterns">Engineering patterns</h2>
-          <Suspense fallback={demoFallback}>{p.deepDive === "tf4" ? <Tf4DeepDive /> : <AutoInvoiceDeepDive />}</Suspense>
+          <h2 id="h-patterns">{p.deepDive === "front-desk" ? "Business & engineering" : "Engineering patterns"}</h2>
+          <Suspense fallback={demoFallback}>
+            {p.deepDive === "tf4" ? <Tf4DeepDive /> : p.deepDive === "front-desk" ? <FrontDeskDeepDive /> : <AutoInvoiceDeepDive />}
+          </Suspense>
         </section>
       )}
 
@@ -179,7 +182,7 @@ export default function CaseStudy() {
   const sections = p?.confidential
     ? confidentialSections
     : p?.deepDive
-      ? [...publicSections.slice(0, 2), { id: "patterns", label: "Engineering patterns" }, ...publicSections.slice(2)]
+      ? [...publicSections.slice(0, 2), { id: "patterns", label: p?.deepDive === "front-desk" ? "Business & engineering" : "Engineering patterns" }, ...publicSections.slice(2)]
       : publicSections;
   const active = useActiveSection(p ? sections.map((s) => s.id) : []);
   useMeta(metaFor(p ? `/work/${p.slug}/` : "/404/"));

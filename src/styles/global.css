@@ -1090,3 +1090,62 @@ p { text-wrap: pretty; }
 @media (max-width: 640px) { .facts div { grid-template-columns: 1fr; gap: 0.25rem; } }
 .cert .diploma-cta { font-size: 0.72rem; color: var(--text-2); }
 @media (max-width: 420px) { .brand small { display: none; } }
+
+/* ---------- Business lens ---------- */
+.biz-flow { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: var(--space-6); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; width: fit-content; max-width: 100%; }
+.biz-flow span { position: relative; padding: 0.55rem 1.1rem 0.55rem 1.4rem; font-size: 0.86rem; color: var(--text-2); }
+.biz-flow span + span { border-left: 1px solid var(--line); }
+.biz-flow span:last-child { color: var(--text); background: var(--accent-soft); }
+.biz-flow i { font-style: normal; color: var(--accent); font-size: 0.72rem; margin-right: 0.35rem; }
+.biz-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+.biz-card { position: relative; display: grid; gap: var(--space-3); align-content: start; padding: var(--space-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--bg-raised); overflow: hidden; }
+.biz-card::before { content: ""; position: absolute; left: 0; top: 0; height: 2px; width: 38%; background: linear-gradient(90deg, var(--gold), transparent); }
+.biz-card h3 { font-size: var(--step-1); }
+.biz-card p { color: var(--text-2); font-size: 0.95rem; }
+.biz-card .link-arrow { margin-top: auto; font-size: 0.9rem; }
+.biz-n { color: var(--gold); font-size: 0.74rem; letter-spacing: 0.1em; }
+@media (max-width: 1000px) { .biz-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .biz-grid { grid-template-columns: 1fr; } .biz-flow { border-radius: var(--radius); } .biz-flow span { flex: 1 1 auto; } }
+
+/* ---------- Online Front Desk demos ---------- */
+.fd-calc .ai-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fd-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.fd-kpis div { display: grid; gap: 0.3rem; padding: 1rem 1.1rem; }
+.fd-kpis div + div { border-left: 1px solid var(--line); }
+.fd-kpis .mono { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.fd-kpis strong { font-family: var(--font-mono); font-size: var(--step-2); font-weight: 500; color: var(--text); font-variant-numeric: tabular-nums; }
+.fd-gold { color: var(--gold) !important; }
+.fd-accent { color: var(--accent) !important; }
+@media (max-width: 860px) { .fd-kpis { grid-template-columns: 1fr 1fr; } .fd-kpis div:nth-child(3) { border-left: 0; } .fd-kpis div:nth-child(n + 3) { border-top: 1px solid var(--line); } }
+.fd-product { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr); gap: var(--space-5); align-items: start; }
+.fd-phones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+.fd-phones figure, .fd-video { display: grid; gap: var(--space-3); }
+.fd-phones img { width: 100%; border-radius: 16px; border: 1px solid var(--line); background: #eef1f5; }
+.fd-phones figcaption { font-size: 0.74rem; color: var(--muted); }
+.fd-video video { width: 100%; height: auto; aspect-ratio: 9 / 16; border-radius: 16px; border: 1px solid var(--line-strong); background: #0b1626; object-fit: cover; }
+.fd-video figcaption { display: grid; gap: 0.3rem; font-size: 0.84rem; color: var(--text-2); }
+.fd-video figcaption .mono { font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; }
+@media (max-width: 960px) { .fd-product { grid-template-columns: 1fr; } .fd-video { max-width: 340px; } }
+@media (max-width: 560px) { .fd-phones { grid-template-columns: 1fr 1fr; } .fd-phones figure:last-child { display: none; } }
+.fd-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fd-funnel { display: grid; gap: 0.6rem; }
+.fd-funnel li { display: grid; grid-template-columns: minmax(0, 1fr) 3rem minmax(0, 0.6fr) minmax(0, 1fr); align-items: center; gap: var(--space-4); font-size: 0.9rem; }
+.fd-funnel strong { font-family: var(--font-mono); font-size: 1.1rem; text-align: right; color: var(--text); }
+.fd-step { color: var(--text); font-weight: 500; }
+.fd-funnel .muted { font-size: 0.82rem; }
+.fd-bar { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.fd-bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-strong)); transition: width 450ms var(--ease); }
+.fd-funnel li:last-child .fd-bar span { background: linear-gradient(90deg, var(--gold), #f0cd7a); }
+@media (max-width: 760px) { .fd-controls { grid-template-columns: 1fr; } .fd-funnel li { grid-template-columns: minmax(0, 1fr) 2.6rem; } .fd-step, .fd-funnel .muted { grid-column: 1 / -1; } }
+.fd-timeline { margin: 0 0 var(--space-5); }
+.fd-timeline figcaption { align-items: center; }
+.fd-shuffle { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
+.fd-ledger { border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-raised); }
+.fd-ledger-row { display: grid; grid-template-columns: 120px minmax(0, 1fr) 70px minmax(0, 1.3fr); gap: var(--space-4); padding: 0.85rem 1.1rem; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.fd-ledger-head { border-top: 0; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); background: var(--surface); }
+.fd-ledger-row .mono { font-size: 0.8rem; color: var(--accent); }
+.fd-cost { color: var(--gold) !important; font-size: 0.95rem !important; }
+.fd-ledger-row .muted { font-size: 0.86rem; }
+@media (max-width: 760px) { .fd-ledger-head { display: none; } .fd-ledger-row { grid-template-columns: 1fr auto; gap: 0.3rem 1rem; } .fd-ledger-row > :nth-child(2), .fd-ledger-row > :nth-child(4) { grid-column: 1 / -1; } .fd-ledger-row > :nth-child(3) { grid-row: 1; grid-column: 2; } }
+.fd-timeline .figure-body { aspect-ratio: auto; min-height: 0; height: auto; padding: 0.75rem 0.5rem; }
+.fd-timeline .figure-body svg { height: auto; }

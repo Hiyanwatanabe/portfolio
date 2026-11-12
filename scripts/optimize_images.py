@@ -29,6 +29,10 @@ JOBS = {
     "cert-google": ("google-cert.jpg", None, [640, 1287]),
     # PSAC "Athlete of the Week" graphic, from the conference's Instagram post. Cropped to the title,
     # photo and name, which also removes Instagram's on-screen buttons.
+    # Online front desk: frames from Hiyan's explainer video (example names and data).
+    "fd-callback": ("fd-callback.png", None, [540]),
+    "fd-outcome": ("fd-outcome.png", None, [540]),
+    "fd-texts": ("fd-texts.png", None, [540]),
     "psac-aotw": ("psac-aotw.jpg", (150 / 720, 89 / 810, 555 / 720, 768 / 810), [405]),
 }
 # Optional: only build the named images, e.g. `python scripts/optimize_images.py ../_orig_assets cert-aws`

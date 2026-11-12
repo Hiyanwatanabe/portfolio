@@ -5,7 +5,7 @@
 // still leaves out counts, provider names, number data, target strategy and screenshots.
 // Research and independent projects are public and carry full technical depth.
 
-export type VisualKey = "spec" | "tf4" | "autoinvoice" | "cognisense" | "market" | "portfolio";
+export type VisualKey = "spec" | "tf4" | "autoinvoice" | "cognisense" | "market" | "portfolio" | "frontdesk";
 export type Layer = "frontend" | "api" | "backend" | "data" | "infra";
 
 type Base = {
@@ -13,7 +13,7 @@ type Base = {
   title: string;
   kicker: string;
   summary: string;
-  context: "Professional" | "Research" | "Independent";
+  context: "Professional" | "Venture" | "Research" | "Independent";
   org: string;
   period: string;
   role: string;
@@ -37,7 +37,7 @@ export type ConfidentialProject = Base & {
 export type PublicProject = Base & {
   confidential: false;
   image?: "cognisense";
-  deepDive?: "tf4" | "auto-invoice"; // extra engineering-patterns section on the case-study page
+  deepDive?: "tf4" | "auto-invoice" | "front-desk"; // extra engineering-patterns section on the case-study page
   spec?: [string, string][]; // spec sheet shown under the case-study header
   problem: string;
   approach: string[];
@@ -270,6 +270,72 @@ export const projects: Project[] = [
       { title: "Right before fast", body: "Counts, totals and spot checks reconcile source and target before results are trusted." },
       { title: "Exceptions are output", body: "Records that don't fit are reported and reviewed, never silently dropped." },
       { title: "Re-runnable by design", body: "Running a batch twice must not create anything twice." },
+    ],
+  },
+  {
+    slug: "front-desk",
+    confidential: false,
+    deepDive: "front-desk",
+    title: "Online Front Desk",
+    kicker: "A product and go-to-market engine for independent auto repair shops",
+    seoTitle: "Online Front Desk for Auto Shops: Product, Explainer Video and Outreach Engine",
+    seoDescription:
+      "Hiyan Kubagawa's own venture: an online front desk for independent auto repair shops, a 75-second explainer built in React with Remotion, and a near-zero-cost lead engine on OpenStreetMap and the Gmail API.",
+    summary:
+      "My own venture. I sized the problem from a shop owner's economics, designed an online front desk that turns missed calls into booked jobs, produced a 75-second programmatic explainer video in React, and built the lead engine that finds, qualifies and emails independent shops at near-zero cost.",
+    context: "Venture",
+    org: "Own venture · Northeast Ohio",
+    period: "2026",
+    role: "Founder: product, engineering and go-to-market",
+    stack: ["Node.js", "Express 5", "OpenStreetMap (Nominatim · Overpass)", "Google Places API", "Gmail API · OAuth 2.0", "Remotion", "React", "TypeScript", "ElevenLabs"],
+    layers: ["frontend", "api", "backend", "data"],
+    visual: "frontdesk",
+    brief: {
+      problem: "Independent repair shops lose jobs to missed calls. The owner is under a car, can't justify a receptionist, and calling everyone back at closing time eats the evening.",
+      solution: "An online front desk: customers request a quote any time (car, problem, photo), the owner works one call-back list, oldest first, and customers get automatic car-ready texts and a review request.",
+      impact: "A product pitched in the owner's own numbers, a reusable explainer that works muted, and an outreach engine that qualifies every lead and sends at near-zero cost, with compliance built in.",
+      status: "Early stage · outreach in progress",
+    },
+    spec: [
+      ["Market", "Independent auto repair shops"],
+      ["Product", "Quote requests · call-back list · auto texts"],
+      ["Value", "Booked jobs from calls that were missed"],
+      ["Video", "Remotion · React · 1080×1920 · 30 fps"],
+      ["Lead source", "OpenStreetMap Overpass · Places fallback"],
+      ["Enrichment", "Site crawl · email ranking · fit check"],
+      ["Sending", "Gmail API · send-only · 25/day, jittered"],
+      ["Cost", "≈ $0 per lead · free tiers capped in code"],
+    ],
+    problem:
+      "A small shop's phone rings while the owner is working on a car. Every missed call is a customer who may call the next shop, and one brake job alone is worth a few hundred dollars. Hiring someone just to answer the phone doesn't pay, and returning calls at 5:30 eats the evening. The business question came first: could a simple tool recover enough of those jobs to be an easy yes for an owner, and could I reach owners without a sales budget?",
+    approach: [
+      "Product: customers request a quote online at any hour (name, car, what's wrong, even a photo). The owner gets one call-back list, oldest first, with tap-to-call and one tap to record the result: booked, or follow-up with a reminder. Customers get a text when their car is ready and a review request the next day, and a weekly summary shows what it brought in. It runs on Google tools the shop already has, with no new phone system.",
+      "Pitch: owners don't read long emails, so the pitch is a 75-second vertical video. I built it as code with Remotion and React: eight scenes, captions timed from the generated voiceover, burned in so it works muted, and every name, color and example number in one config file. Changing the shop name renders a personalized copy.",
+      "Distribution: a local Node and Express app finds repair shops around a city or ZIP code from OpenStreetMap, removes chains and dealerships, crawls each website for a public contact email, and flags shops that already use shop-management software or online booking, since they are a weaker fit. Google Places fills in missing websites under a hard monthly cap that keeps it inside the free tier.",
+      "Sending: emails go out from my own Gmail through the Gmail API with a send-only scope, one at a time, with random gaps of 1.5 to 4 minutes and a daily cap. An address is never emailed twice, every email has an opt-out line, and a no puts the address on a permanent do-not-email list.",
+    ],
+    features: [
+      "Business case modeled from the shop owner's economics",
+      "Product flow: quote request, call-back list, booked or follow-up, auto texts, weekly report",
+      "75-second explainer video built in React with Remotion",
+      "Config-driven video: personalized copies per prospect",
+      "OpenStreetMap shop search with chain and dealer filtering",
+      "Website crawler: contact pages, obfuscated emails, ranking",
+      "Fit check: detects existing shop software and booking forms",
+      "Google Places fallback with a hard free-tier cap",
+      "Gmail API sending: send-only scope, MIME with video attachment",
+      "Slow, capped, de-duplicated queue with a do-not-email list",
+    ],
+    challenges: [
+      { title: "Selling to people who don't read email", body: "A mechanic skims on a phone between jobs. The pitch became a short vertical video whose captions carry the message with the sound off, opening on the owner's problem, not the product." },
+      { title: "Qualify before you pitch", body: "Emailing every shop wastes their time and burns the sender's reputation. Chains and dealers can't buy locally, and shops already on shop software are a harder sell, so both are filtered out before anything is sent." },
+      { title: "Free data is messy data", body: "OpenStreetMap is free but incomplete: many shops have no website or email listed. The crawler checks contact pages and decodes obfuscated addresses, and a capped Places lookup fills the worst gaps without ever creating a bill." },
+      { title: "Trust is the product", body: "A tool that emails people must be trustworthy itself: send-only access to Gmail, slow sending, never twice, opt-out honored permanently, and secrets kept out of the code." },
+    ],
+    outcomes: [
+      "A product defined by the value it creates for the customer, not by its features",
+      "A reusable, personalizable explainer video produced entirely in code",
+      "A lead engine that runs for months at near-zero cost, with guardrails in code",
     ],
   },
   {
