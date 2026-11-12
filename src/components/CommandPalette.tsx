@@ -60,13 +60,15 @@ export function CommandPalette() {
     setQuery("");
     setIndex(0);
     dialog.current?.showModal();
-    requestAnimationFrame(() => input.current?.focus());
+    input.current?.focus();
   };
   const close = () => dialog.current?.close();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const typing = (e.target as HTMLElement)?.closest?.("input, textarea, [contenteditable]");
+      const target = e.target as HTMLElement | null;
+      // "/" types normally inside form fields, except the palette's own (closed) search box.
+      const typing = target?.closest?.("input, textarea, [contenteditable]") && !target.closest(".palette");
       if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         if (dialog.current?.open) close();

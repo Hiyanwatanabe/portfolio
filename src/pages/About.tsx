@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Download, LinkedIn, Mail } from "../components/Icons";
 import { LaneLabel } from "../components/LaneLabel";
+import { FlagPanel } from "../components/Flags";
 import { profile } from "../data/profile";
 import { story } from "../data/story";
 import { useActiveSection, useMeta, useReveal } from "../hooks";
@@ -73,6 +74,7 @@ export default function About() {
                   ))}
                 </div>
               )}
+              {s.id === "background" && <FlagPanel />}
               {s.id === "background" && (
                 <figure className="story-photo">
                   <img

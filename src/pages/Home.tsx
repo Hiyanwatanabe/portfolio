@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { HeroLanes, PaceRail } from "../components/HeroLanes";
 import { HeroTerminal } from "../components/HeroTerminal";
+import { FlagPanel, MiniFlags } from "../components/Flags";
+import { SkillMatrix } from "../components/SkillMatrix";
 import { ArrowRight, ArrowUpRight, Copy, Download, Expand, GitHub, LinkedIn, Mail, Phone, Verified } from "../components/Icons";
 import { LaneLabel } from "../components/LaneLabel";
 import { ProjectPreview } from "../components/ProjectVisual";
@@ -10,7 +12,6 @@ import { athletics, certifications, education, splits } from "../data/education"
 import { experience } from "../data/experience";
 import { about, contact, profile } from "../data/profile";
 import { getProject, projects, type Project } from "../data/projects";
-import { skillGroups } from "../data/skills";
 import { useMeta, useReveal } from "../hooks";
 import { metaFor } from "../seo";
 import diploma from "../assets/img/diploma-484.webp";
@@ -37,7 +38,7 @@ function Hero() {
         <div className="hero-grid">
           <div>
             <p className="hero-eyebrow mono">
-              <span className="dot" aria-hidden /> {profile.location} · from {profile.origin}
+              <span className="dot" aria-hidden /> <MiniFlags /> {profile.location} · from {profile.origin}
             </p>
             <h1 id="hero-title">
               Hiyan <span className="last">Kubagawa</span>
@@ -430,59 +431,19 @@ function Experience() {
   );
 }
 
-const SKILLS_SHOWN = 4;
-
 function Skills() {
   const ref = useReveal<HTMLElement>();
-  const [all, setAll] = useState(false);
-  const tiers = [
-    ["production", "Used in production at work"],
-    ["projects", "Hands-on in projects & labs"],
-    ["foundations", "Foundations / coursework"],
-  ] as const;
   return (
     <section className="section" id="skills" ref={ref} aria-labelledby="skills-title">
       <div className="container">
         <LaneLabel n="05">Toolkit</LaneLabel>
         <div className="section-head reveal">
-          <h2 id="skills-title">What I reach for, and how well I know it</h2>
-          <p>No percentages. Three honest tiers, and the work that shows each group.</p>
+          <h2 id="skills-title">
+            The <span className="serif">stack</span>, end to end, and how deep each part goes
+          </h2>
+          <p>Every tool I use, by domain, rated in three honest tiers and linked to the work that shows it.</p>
         </div>
-        <div className="skills-legend reveal">
-          {tiers.map(([t, label]) => (
-            <span key={t}>
-              <i className={`tier-dot tier-${t}`} aria-hidden /> {label}
-            </span>
-          ))}
-        </div>
-        <div className="skill-table" id="skill-table" data-all={all}>
-          {skillGroups.map((g, i) => (
-            <div className={`skill-row reveal${i >= SKILLS_SHOWN ? " skill-more" : ""}`} key={g.title}>
-              <div className="skill-head">
-                <h3>{g.title}</h3>
-                <p className="skill-evidence">
-                  <span className="mono">Seen in</span>
-                  {g.evidence.map((slug) => (
-                    <Link key={slug} to={`/work/${slug}/`}>{getProject(slug)?.title}</Link>
-                  ))}
-                </p>
-              </div>
-              <ul className="skill-items" aria-label={g.title}>
-                {tiers.flatMap(([t, label]) =>
-                  g[t].map((s) => (
-                    <li className="skill" data-tier={t} key={s}>
-                      {s}
-                      <span className="visually-hidden"> ({label})</span>
-                    </li>
-                  )),
-                )}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <button type="button" className="btn skills-toggle" aria-expanded={all} aria-controls="skill-table" onClick={() => setAll((a) => !a)}>
-          {all ? "Show less" : `Show the full toolkit (${skillGroups.length - SKILLS_SHOWN} more groups)`}
-        </button>
+        <SkillMatrix />
       </div>
     </section>
   );
@@ -501,6 +462,7 @@ function About() {
             <Link className="link-arrow" to="/about/">
               Read the full story: from the pool to production <ArrowRight />
             </Link>
+            <FlagPanel />
             <div className="languages" aria-label="Languages">
               {profile.languages.map((l) => (
                 <div key={l.name}>

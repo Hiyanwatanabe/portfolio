@@ -234,13 +234,11 @@ test("certificates open in a viewer and link to the issuers' verification pages"
   }
 });
 
-test("toolkit expands to show every group", async ({ page }) => {
+test("toolkit matrix shows every group with tiers and evidence", async ({ page }) => {
   await page.goto("./#skills");
-  const rows = page.locator(".skill-row");
-  const visible = async () => (await rows.evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== "none").length));
-  expect(await visible()).toBe(4);
-  await page.getByRole("button", { name: /Show the full toolkit/ }).click();
-  expect(await visible()).toBe(await rows.count());
+  await expect(page.locator(".sm-card")).toHaveCount(7);
+  await expect(page.locator(".sm-card").first().locator("li[data-tier='production']").first()).toBeVisible();
+  await expect(page.locator(".sm-card").first().locator(".sm-foot a").first()).toHaveAttribute("href", /\/work\//);
 });
 
 test("about page tells the story and answers the basics", async ({ page }) => {
@@ -267,7 +265,8 @@ test("front desk: business calculator, lead funnel and home business section res
 
 test("command palette: opens with the keyboard, filters and navigates", async ({ page, isMobile }) => {
   test.skip(isMobile, "keyboard shortcut is for desktop");
-  await page.goto("./");
+  await page.goto("./", { waitUntil: "networkidle" });
+  await page.waitForFunction(() => Object.keys(document.getElementById("root") ?? {}).some((k) => k.startsWith("__react")));
   await page.keyboard.press("Control+k");
   const dialog = page.getByRole("dialog", { name: "Command palette" });
   await expect(dialog).toBeVisible();
@@ -275,6 +274,7 @@ test("command palette: opens with the keyboard, filters and navigates", async ({
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/work\/auto-invoice\/$/);
   await page.keyboard.press("/");
+  await expect(page.getByRole("combobox", { name: "Search commands" })).toBeFocused();
   await page.keyboard.type("theme");
   await page.keyboard.press("Enter");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
